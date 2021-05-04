@@ -4,6 +4,10 @@ const { Game } = require('../models/game.model');
 const gameUtils = require('../utils/gameUtils');
 const gameConsts = require('../utils/gameConsts');
 
+const getGameData = async (req,res) =>{
+    res.status(200).send(req.game)
+}
+
 const createNewGame = async (req, res) => {
   try {
     const playersData = req.body.players;
@@ -141,6 +145,7 @@ const resourceDistribution = async (req, res) => {
 
 module.exports = {
   createNewGame,
+  getGameData,
   buildSettelment,
   buildCity,
   buildRoad,

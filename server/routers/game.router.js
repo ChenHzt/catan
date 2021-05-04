@@ -5,6 +5,7 @@ const findGame = require('../middelware/findGame');
 const router = express.Router();
 
 router.post('/', gameController.createNewGame);
+router.get('/:gid',findGame, gameController.getGameData);
 
 router.post(
   '/:gid/player/:pid/buildSettelment',
