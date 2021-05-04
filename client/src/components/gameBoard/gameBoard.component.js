@@ -2,6 +2,8 @@ import { Group } from "@visx/group";
 import React, { useState, useEffect, useRef } from "react";
 import Tile from "../tile/tile.component";
 // import TileNumber from "../tileNumber/tileNumber.component";
+import { connect } from 'react-redux';
+import { getGameData } from '../../store/actions/gameActions';
 
 const GameBoard = () => {
   const generateBoard = (centerLine, topRowX, tileRadius) => {
@@ -13,7 +15,7 @@ const GameBoard = () => {
       let isCentered = i % 2;
       if (isCentered === 0) {
         hexagonsArr.push(
-          <Tile
+          <Tile row={i-2} col ={0} 
             center={{ x: centerLine, y: topRowX + i * tileRadius * 1.5 }}
             size={size}
           ></Tile>
@@ -25,7 +27,7 @@ const GameBoard = () => {
       for (let j = 1; j < numSides + 1; j++) {
         if (isCentered === 1) {
           hexagonsArr.push(
-            <Tile
+            <Tile row={i-2} col ={j}
               center={{
                 x: centerLine + width/2 + width * (j - 1),
                 y: topRowX + i * tileRadius * 1.5,
@@ -34,7 +36,7 @@ const GameBoard = () => {
             ></Tile>
           );
           hexagonsArr.push(
-            <Tile
+            <Tile row={i-2} col ={-j-1}
               center={{
                 x: centerLine - width /2 - width * (j - 1),
                 y: topRowX + i * tileRadius * 1.5,
@@ -45,7 +47,7 @@ const GameBoard = () => {
         } 
         else {
           hexagonsArr.push(
-            <Tile
+            <Tile row={i-1} col ={j}
               center={{
                 x: centerLine + width * j,
                 y: topRowX + i * tileRadius * 1.5,
@@ -54,7 +56,7 @@ const GameBoard = () => {
             ></Tile>
           );
           hexagonsArr.push(
-            <Tile
+            <Tile row={i-2} col ={-j}
               center={{
                 x: centerLine - width * j,
                 y: topRowX + i * tileRadius * 1.5,
@@ -69,7 +71,12 @@ const GameBoard = () => {
   };
   return <Group>
       {generateBoard(400,500/8,500/8)}
-  </Group>;
+  </Group>
 };
 
-export default GameBoard;
+const mapStateToProps = state => {
+  console.log(state.game);
+  return { game:state.game};
+};
+
+export default connect(mapStateToProps,{getGameData})(GameBoard);

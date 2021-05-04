@@ -5,7 +5,7 @@ const gameUtils = require('../utils/gameUtils');
 const gameConsts = require('../utils/gameConsts');
 
 const getGameData = async (req,res) =>{
-    res.status(200).send(req.game)
+    res.status(200).json(req.game)
 }
 
 const createNewGame = async (req, res) => {
@@ -137,9 +137,9 @@ const resourceDistribution = async (req, res) => {
       gameUtils.getResourcesForPlayer(player, game, dice);
       player.save();
     });
-    res.status(200).send(game);
+    res.status(200).json(game);
   } catch (e) {
-    return res.status(400).send({ error: e.message });
+    return res.status(400).json({ error: e.message });
   }
 };
 

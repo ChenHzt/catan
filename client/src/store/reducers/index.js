@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 
 export const gameBoardDimsReducer = (dims = {}, action) => {
     if (action.type === 'GAME_BOARD_DIMS') {
@@ -17,7 +18,7 @@ export const gameBoardDimsReducer = (dims = {}, action) => {
 
 
   export default combineReducers({
-    game: boardReducer,
-    boardDims: dimensionsReducer,
+    game: gameDataReducer,
+    boardDims: gameBoardDimsReducer,
   });
   
