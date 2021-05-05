@@ -9,7 +9,7 @@ import Settlement from "../../components/vertix/settelment.component";
 function Game(props) {
   useEffect(() => {
     const getData = async() => {
-      await props.getGameData('609296bee5ca474b100511bc');
+      await props.getGameData('60930eab646fcb263435fa0c');
     }
     getData();
   },[])
@@ -20,7 +20,7 @@ function Game(props) {
         <rect width="100%" height="100%" fillOpacity={0} />
         <Group>
          { Object.keys(props.game).length && <GameBoard tileRadius='50' topRowX='200'/>}
-         <Settlement color="red"/>
+         {/* <Settlement color="red"/> */}
         </Group>
       </svg>
       <Dice/>

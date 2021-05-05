@@ -36,13 +36,13 @@ const UserSchema = new mongoose.Schema({
 
 });
 
-userSchema.virtual('games', {
+UserSchema.virtual('games', {
     ref: 'Game',
     localField: '_id',
     foreignField: 'creator'
 });
 
-userSchema.methods.toJSON = function () {
+UserSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
 
@@ -53,7 +53,7 @@ userSchema.methods.toJSON = function () {
 }
 
 
-userSchema.methods.generateAuthToken = async function () {
+UserSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, 'catanApplication')
 
@@ -63,7 +63,7 @@ userSchema.methods.generateAuthToken = async function () {
     return token;
 }
 
-userSchema.statics.findByCredentials = async (email, password) => {
+UserSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
 
     if (!user) {
@@ -80,7 +80,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 }
 
 // Hash the plain text password before saving
-userSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function (next) {
     const user = this
 
     if (user.isModified('password')) {
@@ -90,7 +90,7 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
-const User = mongoose.model('User',userSchema)
+const User = mongoose.model('User',UserSchema)
 
 module.exports = {
     User

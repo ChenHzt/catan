@@ -1,9 +1,6 @@
+import axios from "axios";
 
-import axios from 'axios';
-
-/** base url to make requests to the the movie database */
-const instance = axios.create({
-  baseURL: 'https://localhost:5000',
+const api = axios.create({
+  baseURL: "http://localhost:5000/api",
 });
-
-export default instance;
+export default api;

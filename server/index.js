@@ -6,7 +6,7 @@ const app = express();
 
 require('./db/mongoose');
 const gameRouter = require('./routers/game.router');
-const gameRouter = require('./routers/user.router');
+const userRouter = require('./routers/user.router');
 
 app.use(express.json());
 app.use(cors());
