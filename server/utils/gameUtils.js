@@ -3,7 +3,7 @@
 /* eslint-disable no-plusplus */
 const { Player } = require('../models/player.model');
 const { Game } = require('../models/game.model');
-const { edgesData, hexasData } = require('../consts/boardGraphConsts');
+const { edgesData, hexasData,mapVerticesNeighbors } = require('../consts/boardGraphConsts');
 const { tileCounts, tileDiceValues } = require('./gameConsts');
 
 const initializeItems = (amount) => {
@@ -55,9 +55,10 @@ const generateRandomBoard = () => {
     boardTiles = boardTiles.concat(Array(tileCounts[key]).fill(key));
   }
   shuffleArray(boardTiles);
-  const temp1 = boardTiles.map((elem, i) => {
+  let index = 0;
+  const temp1 = boardTiles.map((elem) => {
     if (elem === 'desert') return { number: 0, resource: elem };
-    return { number: tileDiceValues[i], resource: elem };
+    return { number: tileDiceValues[index++], resource: elem };
   });
   return temp1;
 };
@@ -73,12 +74,12 @@ const initializeBoard = () => {
   const randomBoardTiles = generateRandomBoard();
 
   for (let i = 0; i < 54; i++) {
-    board.vertices.push({ vertixId: i, neighborVertices: [] });
+    board.vertices.push({ vertixId: i });
   }
 
   board.edges = edgesData.map((edge, index) => {
-    board.vertices[edge[0]].neighborVertices.push(edge[1]);
-    board.vertices[edge[1]].neighborVertices.push(edge[0]);
+    // board.vertices[edge[0]].neighborVertices.push(edge[1]);
+    // board.vertices[edge[1]].neighborVertices.push(edge[0]);
     return {
       edgeId: index,
       neighborVertices: [edge[0], edge[1]],
@@ -88,7 +89,7 @@ const initializeBoard = () => {
   board.hexs = hexasData.map((h, i) => ({
     hexId: i,
     location: h.location,
-    vertices: [],
+    // vertices: [],
     resource: randomBoardTiles[i].resource,
     diceNumber: randomBoardTiles[i].number,
   }));
@@ -139,7 +140,7 @@ const validateRoadLocationIsProvided = (body) => {
 const validateLocationIsAvailable = (game, location) => {
   if (game.board.vertices[location].build !== null)
     throw new Error('this location is already ocupied');
-  const neighbors = game.board.vertices[location].neighborVertices;
+  const neighbors = mapVerticesNeighbors[location].neighborVertices;
   neighbors.forEach((neighbor) => {
     if (game.board.vertices[neighbor].build != null)
       throw new Error(

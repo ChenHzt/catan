@@ -94,4 +94,24 @@ const edgesData = [
   [51, 52],
   [52, 53],
 ];
+
+const mapVerticesNeighbors = new Map();
+for(let i=0;i<54;i++)
+  mapVerticesNeighbors.set(i,{neighborVertices:[],neighborHexs:[],neighborEdges:[]})
+
+  edgesData.forEach((edge,i) => {
+  mapVerticesNeighbors.get(edge[0]).neighborVertices.push(edge[1]);
+  mapVerticesNeighbors.get(edge[1]).neighborVertices.push(edge[0]);
+  
+  mapVerticesNeighbors.get(edge[0]).neighborEdges.push(i);
+  mapVerticesNeighbors.get(edge[1]).neighborEdges.push(i);
+});
+
+hexasData.forEach((hex,i) =>{
+  hex.vertices.forEach(ver => {
+    mapVerticesNeighbors.set(ver,i);
+  })
+})
+
+
 module.exports = { hexasData, edgesData };
