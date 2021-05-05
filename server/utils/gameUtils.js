@@ -89,7 +89,7 @@ const initializeBoard = () => {
   board.hexs = hexasData.map((h, i) => ({
     hexId: i,
     location: h.location,
-    // vertices: [],
+    vertices: h.vertices,
     resource: randomBoardTiles[i].resource,
     diceNumber: randomBoardTiles[i].number,
   }));

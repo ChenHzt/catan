@@ -21,6 +21,9 @@ const HexSchema = new mongoose.Schema({
     enum: ['brick', 'desert', 'wood', 'wheat', 'sheep', 'ore'],
     require: true,
   },
+  vertices:[
+    {type:Number}
+  ],
   diceNumber: {
     type: Number,
     require: true,
