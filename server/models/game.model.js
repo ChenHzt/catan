@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const HexSchema = new mongoose.Schema({
   hexId: {
@@ -18,12 +18,10 @@ const HexSchema = new mongoose.Schema({
   },
   resource: {
     type: String,
-    enum: ['brick', 'desert', 'wood', 'wheat', 'sheep', 'ore'],
+    enum: ["brick", "desert", "wood", "wheat", "sheep", "ore"],
     require: true,
   },
-  vertices:[
-    {type:Number}
-  ],
+  vertices: [{ type: Number }],
   diceNumber: {
     type: Number,
     require: true,
@@ -43,7 +41,7 @@ const VertixSchema = new mongoose.Schema({
     type: {
       player: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Player',
+        ref: "Player",
       },
     },
     default: null,
@@ -65,7 +63,7 @@ const EdgeSchema = new mongoose.Schema({
     type: {
       player: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Player',
+        ref: "Player",
       },
     },
     default: null,
@@ -93,7 +91,7 @@ const GameSchema = new mongoose.Schema({
     require: true,
     validate(value) {
       if (value < 3 || value > 4)
-        throw new Error('this game is for 3-4 players only');
+        throw new Error("this game is for 3-4 players only");
     },
   },
   currentTurn: {
@@ -113,13 +111,18 @@ const GameSchema = new mongoose.Schema({
   players: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Player',
+      ref: "Player",
     },
   ],
   board: BoardSchema,
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    require: true,
+  },
 });
 
-const Game = mongoose.model('Game', GameSchema);
+const Game = mongoose.model("Game", GameSchema);
 
 module.exports = {
   Game,

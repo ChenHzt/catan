@@ -6,12 +6,13 @@ const app = express();
 
 require('./db/mongoose');
 const gameRouter = require('./routers/game.router');
+const gameRouter = require('./routers/user.router');
 
 app.use(express.json());
 app.use(cors());
 
-app.get('/api', (req, res) => res.send('hi'));
 app.use('/api/games', gameRouter);
+app.use('/api/users', userRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
