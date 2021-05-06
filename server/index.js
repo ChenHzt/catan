@@ -4,21 +4,18 @@ const path = require('path');
 
 const app = express();
 
+const route = require("./routers/index");
+
 require('./db/mongoose');
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, '../../client/build')))
-} else {
-  app.use(express.static(path.join(__dirname, '../../client/public')))
-}
-const gameRouter = require('./routers/game.router');
-const userRouter = require('./routers/user.router');
+// const gameRouter = require('./routers/game.router');
+// const userRouter = require('./routers/user.router');
 
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/games', gameRouter);
-app.use('/api/users', userRouter);
+app.use(route);
+// app.use('/api/users', userRouter);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname + "/client/build/index.html"));

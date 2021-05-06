@@ -4,6 +4,7 @@ const userController = require('../controllers/user.controller');
 
 const router = express.Router();
 
+
 //create new user
 router.post("/", userController.createUser) //permission to all v
 
