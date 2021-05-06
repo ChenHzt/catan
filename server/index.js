@@ -11,6 +11,8 @@ const userRouter = require('./routers/user.router');
 app.use(express.json());
 app.use(cors());
 
+app.get('/', (req,res) => res.send('hi'));
+
 app.use('/api/games', gameRouter);
 app.use('/api/users', userRouter);
 
