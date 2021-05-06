@@ -7,9 +7,9 @@ const app = express();
 require('./db/mongoose');
 
 if (process.env.NODE_ENV === "production") {
-  router.use(express.static(path.join(__dirname, '../../client/build')))
+  app.use(express.static(path.join(__dirname, '../../client/build')))
 } else {
-  router.use(express.static(path.join(__dirname, '../../client/public')))
+  app.use(express.static(path.join(__dirname, '../../client/public')))
 }
 const gameRouter = require('./routers/game.router');
 const userRouter = require('./routers/user.router');
