@@ -6,9 +6,11 @@ const app = express();
 
 require('./db/mongoose');
 
-const publicDirectoryPath = path.join(__dirname, "client/build");
-app.use(express.static(publicDirectoryPath));
-
+if (process.env.NODE_ENV === "production") {
+  router.use(express.static(path.join(__dirname, '../../client/build')))
+} else {
+  router.use(express.static(path.join(__dirname, '../../client/public')))
+}
 const gameRouter = require('./routers/game.router');
 const userRouter = require('./routers/user.router');
 
@@ -18,9 +20,9 @@ app.use(cors());
 app.use('/api/games', gameRouter);
 app.use('/api/users', userRouter);
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname + "/client/build/index.html"));
+// });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
