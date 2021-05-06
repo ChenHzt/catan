@@ -15,8 +15,8 @@ function SignUp(props) {
       if(password1 !== password2)
         throw new Error('both passwords has to be the same');
       const userData = await AuthService.register(name, email, password1);
-      
-      history.push(`/game`);
+      props.setCurrentUser(userData.user);
+      history.push(`/profile`);
     } catch (error) {
       const resMessage =
         (error.response &&

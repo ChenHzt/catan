@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import BasicForm from "../form/form.component";
+import { connect } from 'react-redux';
 import { StyledButton, StyledLink } from "../../style";
 import AuthService from "../../services/auth.service";
 import { useHistory } from "react-router-dom";
+import {setCurrentUser} from '../../store/actions/userActions'
 
 function Login(props) {
   const [email, setEmail] = useState("");
@@ -15,7 +17,10 @@ function Login(props) {
   const handleLogin = async () => {
     try {
       const userData = await AuthService.login(email, password);
-      history.push(`/game`);
+      // console.log(userData);
+      props.setCurrentUser(userData.user);
+
+      history.push(`/profile`);
     } catch (error) {
       const resMessage =
         (error.response &&
@@ -60,4 +65,8 @@ function Login(props) {
   );
 }
 
-export default Login;
+const mapStateToProps = state => {
+  return { user:state.user};
+};
+
+export default connect(mapStateToProps,{setCurrentUser})(Login);;

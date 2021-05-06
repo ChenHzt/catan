@@ -10,7 +10,7 @@ function App() {
       <Switch>
         <Route exact path={['/']} component={Home} />
         {/* <Route exact path={['/home']} component={Home} /> */}
-        <Route exact path="/game" component={Game} />
+        <Route exact path="/game/:id" component={Game} />
         <Route path="*" exact component={NotFoundPage} />
       </Switch>
     </BrowserRouter>

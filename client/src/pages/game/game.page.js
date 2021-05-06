@@ -5,11 +5,13 @@ import GameBoard from "../../components/gameBoard/gameBoard.component";
 import { getGameData } from '../../store/actions/gameActions';
 import Dice from '../../components/dice/dice.component'
 import Settlement from "../../components/vertix/settelment.component";
+import {useParams} from "react-router-dom";
 
 function Game(props) {
+  const { id } = useParams();
   useEffect(() => {
     const getData = async() => {
-      await props.getGameData('60930eab646fcb263435fa0c');
+      await props.getGameData(id);
     }
     getData();
   },[])

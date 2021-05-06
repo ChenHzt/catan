@@ -22,7 +22,13 @@ const Hexagon = ({ size, center, backgroundImg, onClick}) => {
 
   return (
     <svg width={shapeWidth} height={shapeHeight} x={x} y={y} onClick={onClick}>
+      {/* <defs>
+        <pattern id="pattern-checkers" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+          <image xlinkHref={backgroundImg} width={shapeWidth} height={shapeHeight} x='0' y="0" />
+          
+        </pattern>
 
+      </defs> */}
       <Polygon
         sides={6}
         size={shapeSide}
