@@ -40,17 +40,6 @@ const GameNode = (props) => {
   );
 };
 
-// const mapStateToProps = (state, ownProps) => {
-//   return {
-//     radius: state.dimensions.componentWidth / 10,
-//     center: getCenterForIndex(ownProps.node, state.dimensions.coords.NODE),
-//   };
-// };
 
-// export default connect(mapStateToProps, {
-//   getTilesForNode,
-//   getResourceTilesForNode,
-//   getPortsForNode,
-// })(GameNode);
 
 export default GameNode

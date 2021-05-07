@@ -29,7 +29,7 @@ export const setBoardGameDims = dims => {
   
   export const setGamesDimentions = (width, height) => {
     console.log(width,height);
-    const tileRadius = width/12;
+    const tileRadius = height/10;
     const centerLine = width/2;
     const topRowX = height/2 -3*tileRadius;
     return {
@@ -37,3 +37,10 @@ export const setBoardGameDims = dims => {
       payload:{width,height,tileRadius,centerLine,topRowX}
     }
   }
+
+  export const startRoll = () => (dispatch, getState) => {
+    dispatch({
+      type: SET_ROLLING,
+      payload: null,
+    });
+  };

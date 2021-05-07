@@ -58,9 +58,9 @@ export const calcTileCenterByLocationMap = (tileRadius,centerLine,topRowX) =>{
   return tileCenterByLocationMap;
 }
 
+
 export const getTileCenterPointByLocation = (tileLocation) => {
   const temp = tileCenterByLocationMap.get(JSON.stringify(tileLocation));
-  // console.log(temp);
   return temp;
 };
 const nodesCenterByIdMap = new Map()
@@ -82,6 +82,15 @@ export const calcTileNodesCenterPoint = (tileLocation, tileRadius, i) => {
   };
 };
 
+
+export const calcNodeCenterByLocationMap = (tileRadius,centerLine,topRowX) =>{
+  // if(prevCalcData.tileRadius === tileRadius
+  //   && prevCalcData.centerLine === centerLine
+  //   && prevCalcData.topRowX === topRowX)
+  //     return nodesCenterByIdMap;
+  tileNodesCenterByLocationMap = calcTileNodesCenterPoint(tileRadius,centerLine,topRowX)
+  return tileNodesCenterByLocationMap;
+}
 
 
 export const calcTileEdgesCenterPoint = (tileLocation, tileRadius, i) => {

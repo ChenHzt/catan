@@ -9,79 +9,21 @@ import GameNode from "../vertix/vertix.component";
 import { calcTileNodesCenterPoint,getTileCenterPointByLocation } from "../../helper";
 const GameBoard = (props) => {
   const generateBoard = (tileRadius) => {
-    const rows = [3, 4, 5, 4, 3];
     const hexagonsArr = [];
-    const size = tileRadius;
-    const width = size * Math.sqrt(3);
     const temp = props.game.board.hexs.map((hex) => [
       JSON.stringify(hex.location),
       hex,
     ]);
     const tileMap = new Map(temp);
 
-    console.log(tileMap);
+    tileMap.forEach((tile,locationStr) =>{
+      hexagonsArr.push(<Tile
+                tile={tile}
+                center={getTileCenterPointByLocation(JSON.parse(locationStr))}
+                size={props.tileRadius}
+              ></Tile>)
+    })
 
-    const oddRToCube = (row, col) => {
-      const x = col - (row - (row & 1)) / 2;
-      const z = row;
-      const y = -x - z;
-      return JSON.stringify({ x, y, z });
-    };
-    let location;
-    for (let i = 0; i < rows.length; i++) {
-      let isCentered = i % 2;
-      if (isCentered === 0) {
-        location = oddRToCube(i - 2, 0);
-        // console.log(getTileCenterPointByLocation(location)); 
-        hexagonsArr.push(
-          <Tile
-            tile={tileMap.get(location)}
-            center={getTileCenterPointByLocation(JSON.parse(location))}
-            size={size}
-          ></Tile>
-        );
-      }
-
-      let numSides = Math.floor(rows[i] / 2);
-
-      for (let j = 1; j < numSides + 1; j++) {
-        if (isCentered === 1) {
-          location = oddRToCube(i - 2, j - 1)
-          hexagonsArr.push(
-            <Tile
-              tile={tileMap.get(location)}
-              center={getTileCenterPointByLocation(JSON.parse(location))}
-              size={size}
-            ></Tile>
-          );
-          location = oddRToCube(i - 2, -j)
-          hexagonsArr.push(
-            <Tile
-              tile={tileMap.get(location)}
-              center={getTileCenterPointByLocation(JSON.parse(location))}
-              size={size}
-            ></Tile>
-          );
-        } else {
-          location =  oddRToCube(i - 2, j)
-          hexagonsArr.push(
-            <Tile
-              tile={tileMap.get(location)}
-              center={getTileCenterPointByLocation(JSON.parse(location))}
-              size={size}
-            ></Tile>
-          );
-          location = oddRToCube(i - 2, -j)
-          hexagonsArr.push(
-            <Tile
-              tile={tileMap.get(location)}
-              center={getTileCenterPointByLocation(JSON.parse(location))}
-              size={size}
-            ></Tile>
-          );
-        }
-      }
-    }
     return hexagonsArr;
   };
 
@@ -103,7 +45,7 @@ const GameBoard = (props) => {
               <GameNode
                 node={ver}
                 radius="10"
-                center={calcTileNodesCenterPoint(hex.location, 60, i)}
+                center={calcTileNodesCenterPoint(hex.location, props.tileRadius, i)}
               ></GameNode>
             )
           : null
@@ -126,7 +68,7 @@ const GameBoard = (props) => {
       />
       <Group width={props.width} height={props.width} >
         <Group width={props.width} height={props.width} >
-          {generateBoard(props.tileRadius)}
+          {generateBoard()}
           {generateNodes()}
         </Group>
       </Group>

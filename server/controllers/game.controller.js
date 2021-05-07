@@ -15,7 +15,7 @@ const createNewGame = async (req, res) => {
     const playersData = req.body.players;
     const players = [];
     for (let i = 0; i < playersData.length; i++) {
-      players.push(gameUtils.initializePlayer(i, playersData[i].name));
+      players.push(gameUtils.initializePlayer(i, playersData[i]));
     }
     const game = new Game({
       playersNum: playersData.length,
