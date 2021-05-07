@@ -1,11 +1,13 @@
 const express = require('express');
 const gameController = require('../controllers/game.controller');
 const findGame = require('../middelware/findGame');
+const {auth} = require('../middelware/auth')
+
 
 const router = express.Router();
 
-router.post('/', gameController.createNewGame);
-router.get('/:gid',findGame, gameController.getGameData);
+router.post('/', auth, gameController.createNewGame);
+router.get('/:gid',[auth,findGame], gameController.getGameData);
 
 router.post(
   '/:gid/player/:pid/buildSettelment',

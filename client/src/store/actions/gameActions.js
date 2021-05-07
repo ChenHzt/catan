@@ -1,5 +1,7 @@
 import api from '../../api/api'
 // import api from 'axios';
+import userService from '../../services/user.service';
+import {calcTileCenterByLocationMap} from '../../helper'
 export const setBoardGameDims = dims => {
     // Return an action
     return {
@@ -15,7 +17,8 @@ export const setBoardGameDims = dims => {
   
   export const getGameData = (gameid) => async dispatch => {
     try{
-      const response = await api.get(`/games/${gameid}`);
+      const response = await userService.getGameData(gameid);
+      console.log(response.data);
       dispatch({ type: `GAME_DATA`, payload: response.data });
 
     }
@@ -24,3 +27,13 @@ export const setBoardGameDims = dims => {
     }
   };
   
+  export const setGamesDimentions = (width, height) => {
+    console.log(width,height);
+    const tileRadius = width/12;
+    const centerLine = width/2;
+    const topRowX = height/2 -3*tileRadius;
+    return {
+      type:'GAME_DIMENTIONS',
+      payload:{width,height,tileRadius,centerLine,topRowX}
+    }
+  }

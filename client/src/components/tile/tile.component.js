@@ -4,6 +4,7 @@ import Hexagon from "../hexagon/hexagon.component";
 import TileNumber from "../tileNumber/tileNumber.component";
 
 const Tile = ({size,center,row,col,tile}) => {
+  console.log(center);
   const oddRToCube = (row,col) =>{
     const x = col- (row + (row&1)) / 2;
     const z = row;

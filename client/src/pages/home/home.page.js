@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { useHistory } from "react-router-dom";
 
 import authService from '../../services/auth.service';
-// import {setCurrentUser} from '../../store/actions/userActions'
+import {setCurrentUser} from '../../store/actions/userActions'
 
 
 function Home(props) {
@@ -18,11 +18,11 @@ function Home(props) {
   const [form,setForm] = useState(forms.LOGIN);
 
   const userData = authService.getCurrentUser();
-  // if(userData)
-  // {
-  //   // props.setCurrentUser(userData.user) ;
-  //   history.push('/profile')
-  // }
+  if(userData)
+  {
+    props.setCurrentUser(userData.user) ;
+    history.push('/profile')
+  }
 
   const renderForm = () =>{
     if(form===forms.LOGIN) return <Login changeForm={(newForm) => setForm(forms[newForm])}/>
@@ -40,8 +40,8 @@ function Home(props) {
 }
 
 const mapStateToProps = state => {
-  // return { user};
+  return { user:state.user};
 };
 
-export default connect(mapStateToProps,{})(Home);
+export default connect(mapStateToProps,{setCurrentUser})(Home);
 

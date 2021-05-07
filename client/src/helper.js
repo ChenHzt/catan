@@ -46,10 +46,22 @@ const calcTilesCenterPoint = (tileRadius, centerLine, topRowX) => {
   return tileCoordsMap;
 };
 
-const tileCenterByLocationMap = calcTilesCenterPoint(60, 402, 122);
+let tileCenterByLocationMap=new Map();
+let prevCalcData = {tileRadius:0,centerLine:0,topRowX:0}
+
+export const calcTileCenterByLocationMap = (tileRadius,centerLine,topRowX) =>{
+  if(prevCalcData.tileRadius === tileRadius
+    && prevCalcData.centerLine === centerLine
+    && prevCalcData.topRowX === topRowX)
+      return tileCenterByLocationMap;
+  tileCenterByLocationMap = calcTilesCenterPoint(tileRadius,centerLine,topRowX)
+  return tileCenterByLocationMap;
+}
 
 export const getTileCenterPointByLocation = (tileLocation) => {
-  return tileCenterByLocationMap.get(JSON.stringify(tileLocation));
+  const temp = tileCenterByLocationMap.get(JSON.stringify(tileLocation));
+  // console.log(temp);
+  return temp;
 };
 const nodesCenterByIdMap = new Map()
 export const calcTileNodesCenterPoint = (tileLocation, tileRadius, i) => {

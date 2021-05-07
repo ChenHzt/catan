@@ -8,6 +8,8 @@ const getGameData = async (req,res) =>{
     res.status(200).json(req.game)
 }
 
+
+
 const createNewGame = async (req, res) => {
   try {
     const playersData = req.body.players;
@@ -21,6 +23,7 @@ const createNewGame = async (req, res) => {
       isActive: true,
       players: players.map((p) => p._id),
       board: gameUtils.initializeBoard(),
+      creator:req.user._id
     });
     await game.save();
     // gameUtils.createMapFromHexToVertix(game.board);
