@@ -144,7 +144,7 @@ const resourceDistribution = async (req, res) => {
   }
 };
 
-const getValidActionForUser = async (req, res) => {
+const getValidActionForPlayer = async (req, res) => {
   const { game, user } = req;
   const player = game.players[game.currentTurn - 1];
   const actions = [];
@@ -193,7 +193,7 @@ const getValidActionForUser = async (req, res) => {
   }
 };
 
-const getValidVerticesForUserToBuildSettelment = (req, res) => {
+const getValidVerticesForPlayerToBuildSettelment = (req, res) => {
   const { game } = req;
   
   const validVertices = [];
@@ -211,6 +211,7 @@ const getValidVerticesForUserToBuildSettelment = (req, res) => {
       }
     }
       catch(e){
+        console.log(e.message)
       } 
     }
     res.status(200).send(validVertices)
@@ -244,6 +245,32 @@ const getValidEdgesForPlayerToBuildRoad = (req,res) =>{
     res.status(400).send(e.message);
   }
 }
+
+const getValidVerticesForPlayerToBuildCity = (req,res) =>{
+  const validVertices = []
+  const {game} = req;
+  try {
+    for (let i = 0; i < game.board.edges.length; i++) {
+      try{
+        switch (game.phase) {
+          case "SETUP_ROUND_1":
+          case "SETUP_ROUND_2":
+          case "GAME":
+            gameUtils.validations.validatePlayerHasSettelmentInLocation(game.players[game.currentTurn-1],i);
+            validVertices.push(i);      
+            break;   
+      }
+    }
+      catch(e){
+      } 
+    }
+    res.status(200).send(validVertices)
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+}
+
+
 module.exports = {
   createNewGame,
   getGameData,
@@ -251,4 +278,8 @@ module.exports = {
   buildCity,
   buildRoad,
   resourceDistribution,
+  getValidActionForPlayer,
+  getValidVerticesForPlayerToBuildSettelment,
+  getValidEdgesForPlayerToBuildRoad,
+  getValidVerticesForPlayerToBuildCity,
 };

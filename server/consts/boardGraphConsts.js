@@ -109,9 +109,9 @@ for(let i=0;i<54;i++)
 
 hexasData.forEach((hex,i) =>{
   hex.vertices.forEach(ver => {
-    mapVerticesNeighbors.set(ver,i);
+    mapVerticesNeighbors.get(ver).neighborHexs.push(i);
   })
 })
 
 
-module.exports = { hexasData, edgesData };
+module.exports = { hexasData, edgesData,mapVerticesNeighbors};

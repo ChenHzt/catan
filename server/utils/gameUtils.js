@@ -140,7 +140,7 @@ const validateRoadLocationIsProvided = (body) => {
 const validateLocationIsAvailable = (game, location) => {
   if (game.board.vertices[location].build !== null)
     throw new Error('this location is already ocupied');
-  const neighbors = mapVerticesNeighbors[location].neighborVertices;
+  const neighbors = mapVerticesNeighbors.get(location).neighborVertices;
   neighbors.forEach((neighbor) => {
     if (game.board.vertices[neighbor].build != null)
       throw new Error(
