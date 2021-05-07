@@ -120,6 +120,12 @@ const GameSchema = new mongoose.Schema({
     ref: "User",
     require: true,
   },
+  phase:{
+    type:String,
+    enum:['SETUP_ROUND_1','SETUP_ROUND_2','GAME','END'],
+    default:'SETUP_ROUND_1'
+
+  }
 });
 
 const Game = mongoose.model("Game", GameSchema);
