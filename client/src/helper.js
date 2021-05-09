@@ -63,8 +63,10 @@ export const getTileCenterPointByLocation = (tileLocation) => {
   const temp = tileCenterByLocationMap.get(JSON.stringify(tileLocation));
   return temp;
 };
-const nodesCenterByIdMap = new Map()
-export const calcTileNodesCenterPoint = (tileLocation, tileRadius, i) => {
+
+
+export const nodesCenterByIdMap = new Map()
+export const calcTileNodesCenterPoint = (tileLocation, tileRadius, i,vertixNumber) => {
   const locationLabel = [
     "top",
     "top-right",
@@ -76,10 +78,12 @@ export const calcTileNodesCenterPoint = (tileLocation, tileRadius, i) => {
   const tileCenter = getTileCenterPointByLocation(tileLocation);
   const angle_deg = 60 * (i-2) - 30;
   const angle_rad = (Math.PI / 180) * angle_deg;
-  return {
+  const centerLocation = {
     x: tileCenter.x + tileRadius * Math.cos(angle_rad),
     y: tileCenter.y + tileRadius * Math.sin(angle_rad),
   };
+  nodesCenterByIdMap.set(vertixNumber,centerLocation)
+  return centerLocation;
 };
 
 

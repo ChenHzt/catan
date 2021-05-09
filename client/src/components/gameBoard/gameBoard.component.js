@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import { getGameData, buildSettelment } from "../../store/actions/gameActions";
 import Settlement from "../vertix/settelment.component";
 import GameNode from "../vertix/vertix.component";
-import { calcTileNodesCenterPoint,getTileCenterPointByLocation } from "../../helper";
+import { calcTileNodesCenterPoint,getTileCenterPointByLocation,nodesCenterByIdMap } from "../../helper";
+import GameEdge from "../edge/edge.component";
 const GameBoard = (props) => {
 
   const onNodeClicked = (node) =>{
@@ -54,7 +55,7 @@ const GameBoard = (props) => {
                 onClick={onNodeClicked}
                 node={ver}
                 radius="10"
-                center={calcTileNodesCenterPoint(hex.location, props.tileRadius, i)}
+                center={calcTileNodesCenterPoint(hex.location, props.tileRadius, i,ver)}
               ></GameNode>
             )
           : null
@@ -65,6 +66,26 @@ const GameBoard = (props) => {
     return arr;
   };
 
+  const generateEdges = () => {
+    console.log(nodesCenterByIdMap);
+    return props.game.board.edges.map((edge) => {
+      const centerNode1 = nodesCenterByIdMap.get(edge.neighborVertices[0]);
+      const centerNode2 = nodesCenterByIdMap.get(edge.neighborVertices[1]);
+
+      const edgeCenter= {
+        x: (centerNode1.x + centerNode2.x)/2,
+        y: (centerNode1.y + centerNode2.y)/2
+      }
+      let slope;
+      if(centerNode1.x === centerNode2.x)
+        slope=90;
+      else slope = (Math.atan((centerNode1.y -centerNode2.y)/(centerNode1.x -centerNode2.x)))* (180/Math.PI)
+
+      const size = ((centerNode1.y -centerNode2.y)**2+(centerNode1.x -centerNode2.x)**2)**0.5;
+
+      return <GameEdge build={props.game.board.edges[edge.edgeId].road} slope={slope} size={size} center={edgeCenter} edge={edge}/>
+    })
+  }
 
 
   return (
@@ -79,6 +100,7 @@ const GameBoard = (props) => {
         <Group width={props.width} height={props.width} >
           {generateBoard()}
           {generateNodes()}
+          {generateEdges()}
         </Group>
       </Group>
     </svg>

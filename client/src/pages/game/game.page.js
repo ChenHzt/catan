@@ -7,7 +7,6 @@ import {
   getValidActions,
   getPlacesForSettelment,
 } from "../../store/actions/gameActions";
-import Dice from "../../components/dice/dice.component";
 import { useParams } from "react-router-dom";
 import { StyledGridContainer } from "./style";
 import {
@@ -16,7 +15,6 @@ import {
 } from "../../helper";
 import PlayersContainer from "../../containers/players/players.container";
 import PlayerActionsContainer from "../../containers/actions/actions.container";
-import { startSession } from "mongoose";
 
 function Game(props) {
   const gameContainer = useRef(null);
@@ -49,13 +47,10 @@ function Game(props) {
       };
     }
   }, [gameContainer.current]);
-
   
   useEffect(() => {
     props.getValidActions(id)
   },[props.game.currentTurn])
-  
-
 
   return (
     <StyledGridContainer>
