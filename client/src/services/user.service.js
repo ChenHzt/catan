@@ -29,8 +29,12 @@ class UserService {
     return await api.get(`/games/${gameId}/getValidPlacesForCity`, { headers: authHeader() });
   }
 
-  builtSettelment(gameId,location) {
+  buildSettelment(gameId,location) {
     return api.post(`/games/${gameId}/buildSettelment`,{location},{ headers: authHeader() })
+  }
+
+  buildRoad(gameId,location) {
+    return api.post(`/games/${gameId}/buildRoad`,{location},{ headers: authHeader() })
   }
   
 }

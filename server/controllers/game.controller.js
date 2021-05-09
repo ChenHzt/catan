@@ -80,8 +80,8 @@ const buildCity = async (req, res) => {
       player,
       req.body.location
     );
-
-    gameUtils.payWithResources(player, gameConsts.payments.city);
+    if(game.phase === 'Game')
+      gameUtils.payWithResources(player, gameConsts.payments.city);
 
     gameUtils.upgradeSettelmentToCity(player, game, req.body.location);
     const session = await mongoose.startSession();
@@ -111,7 +111,8 @@ const buildRoad = async (req, res) => {
     gameUtils.validations.validateRoadLocationIsProvided(req.body);
     gameUtils.validations.validateRoadLocationIsAvailable(game, req.body.location);
 
-    gameUtils.payWithResources(player, gameConsts.payments.road);
+    if(game.phase === 'Game')
+      gameUtils.payWithResources(player, gameConsts.payments.road);
     gameUtils.buildRoad(player, game, req.body.location);
 
     const session = await mongoose.startSession();

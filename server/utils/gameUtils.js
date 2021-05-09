@@ -150,7 +150,7 @@ const validateLocationIsAvailable = (game, location) => {
 };
 
 const validateRoadLocationIsAvailable = (game, location) => {
-  if (game.board.edges[location].build !== null)
+  if (game.board.edges[location].road !== null)
     throw new Error('this location is already ocupied');
 };
 
@@ -224,7 +224,7 @@ const buildRoad = (player, game, roadLocation) => {
 
   player.roads.built.push(roadItem);
 
-  game.board.vertices[roadLocation].build = {
+  game.board.edges[roadLocation].road = {
     player: player._id,
     type: 'road',
     id: roadItem._id,

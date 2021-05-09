@@ -15,8 +15,8 @@ router.post(
   gameController.buildSettelment
 );
 
-router.post('/:gid/buildCity', findGame, gameController.buildCity);
-router.post('/:gid/buildRoad', findGame, gameController.buildRoad);
+router.post('/:gid/buildCity', [auth,findGame], gameController.buildCity);
+router.post('/:gid/buildRoad', [auth,findGame], gameController.buildRoad);
 router.post(
   '/:gid/distributeResources',
   findGame,

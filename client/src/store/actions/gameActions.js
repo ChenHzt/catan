@@ -63,9 +63,9 @@ export const getPlacesForSettelment = (gameid) => async (dispatch) => {
 };
 
 // todoTypes.js
-export const GET_BUILD_REQUEST = "GET_BUILD_REQUEST";
-export const GET_BUILD_SUCCESS = "GET_BUILD_SUCCESS";
-export const GET_BUILD_ERROR = "GET_BUILD_ERROR";
+export const GET_BUILD_REQUEST = "GET_BUILD_SETTELMENT_REQUEST";
+export const GET_BUILD_SUCCESS = "GET_BUILD_SETTELMENT_SUCCESS";
+export const GET_BUILD_ERROR = "GET_BUILD_SETTELMENT_ERROR";
 
 // todoActions.js
 export function loadBuildRequest() {
@@ -97,7 +97,7 @@ export const buildSettelment = (gameid, location) => async (dispatch) => {
     let response;
 
     userService
-      .builtSettelment(gameid, location)
+      .buildSettelment(gameid, location)
       .then((res) => {
         try {
         if (res.status === 200) dispatch(loadBuildSuccess(res.data));
@@ -105,5 +105,50 @@ export const buildSettelment = (gameid, location) => async (dispatch) => {
         catch(e){ console.log(res,e)}
       })
       .catch((err) => dispatch(loadBuildError(err.response.data.error)));
+
+};
+
+// todoTypes.js
+export const GET_BUILD_ROAD_REQUEST = "GET_BUILD_ROAD_REQUEST";
+export const GET_BUILD_ROAD_SUCCESS = "GET_BUILD_ROAD_SUCCESS";
+export const GET_BUILD_ROAD_ERROR = "GET_BUILD_ROAD_ERROR";
+
+// todoActions.js
+export function loadBuildRoadRequest() {
+  return {
+    type: GET_BUILD_ROAD_REQUEST,
+    error: ''
+  };
+}
+
+export function loadBuildRoadSuccess(results) {
+  return {
+    type: GET_BUILD_ROAD_SUCCESS,
+    data: results,
+    error: '',
+  };
+}
+
+export function loadBuildRoadError(error) {
+  return {
+    type: GET_BUILD_ROAD_ERROR,
+    data: null,
+    error: error,
+  };
+}
+
+export const buildRoad = (gameid, location) => async (dispatch) => {
+ 
+    dispatch(loadBuildRoadRequest());
+
+    userService
+      .buildRoad(gameid, location)
+      .then((res) => {
+        try {
+        if (res.status === 200) dispatch(loadBuildRoadSuccess(res.data));
+        }
+        catch(e){ console.log(res,e)}
+      })
+      .catch((err) => dispatch(loadBuildRoadError(err.response.data.error)));
 
 };

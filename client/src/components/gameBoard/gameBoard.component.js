@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Tile from "../tile/tile.component";
 // import TileNumber from "../tileNumber/tileNumber.component";
 import { connect } from "react-redux";
-import { getGameData, buildSettelment } from "../../store/actions/gameActions";
+import { getGameData, buildSettelment,buildRoad } from "../../store/actions/gameActions";
 import Settlement from "../vertix/settelment.component";
 import GameNode from "../vertix/vertix.component";
 import { calcTileNodesCenterPoint,getTileCenterPointByLocation,nodesCenterByIdMap } from "../../helper";
@@ -13,6 +13,11 @@ const GameBoard = (props) => {
   const onNodeClicked = (node) =>{
     if(props.onAction){
       props.buildSettelment(props.game._id,node)
+    }
+  }
+  const onEdgeClicked = (edge) =>{
+    if(props.onAction){
+      props.buildRoad(props.game._id,edge.edgeId)
     }
   }
   
@@ -82,8 +87,8 @@ const GameBoard = (props) => {
       else slope = (Math.atan((centerNode1.y -centerNode2.y)/(centerNode1.x -centerNode2.x)))* (180/Math.PI)
 
       const size = ((centerNode1.y -centerNode2.y)**2+(centerNode1.x -centerNode2.x)**2)**0.5;
-
-      return <GameEdge build={props.game.board.edges[edge.edgeId].road} slope={slope} size={size} center={edgeCenter} edge={edge}/>
+      console.log(props.game.board.edges[edge.edgeId].road);
+      return <GameEdge onClick={onEdgeClicked} build={props.game.board.edges[edge.edgeId].road} slope={slope} size={size} center={edgeCenter} edge={edge}/>
     })
   }
 
@@ -91,7 +96,6 @@ const GameBoard = (props) => {
   return (
     <svg width={'100%'} height={props.height} transform="scale(1)">
       <image
-        // xlinkHref={"/static/images/boardBackground.png"}
          height={props.height}
         x="0"
         y="0"
@@ -112,4 +116,4 @@ const mapStateToProps = (state) => {
   return { game: state.game, locations:state.locations,error:state.error };
 };
 
-export default connect(mapStateToProps, { getGameData,buildSettelment })(GameBoard);
+export default connect(mapStateToProps, { getGameData,buildSettelment,buildRoad })(GameBoard);

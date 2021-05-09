@@ -13,9 +13,14 @@ export const gameDataReducer = (game = {}, action) => {
     console.log(action.payload);
     return action.payload;
   }
-  if (action.type === "GET_BUILD_SUCCESS") {
-    console.log(action);
-    console.log("build settelment", action.data);
+  if (action.type === "GET_BUILD_SETTELMENT_SUCCESS") {
+    // console.log(action);
+    // console.log("build settelment", action.data);
+    return action.data.game;
+  }
+  if (action.type === "GET_BUILD_ROAD_SUCCESS") {
+    // console.log(action);
+    console.log("build road", action.data);
     return action.data.game;
   }
 
