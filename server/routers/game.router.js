@@ -10,13 +10,13 @@ router.post('/', auth, gameController.createNewGame);
 router.get('/:gid',[auth,findGame], gameController.getGameData);
 
 router.post(
-  '/:gid/player/:pid/buildSettelment',
-  findGame,
+  '/:gid/buildSettelment',
+  [auth,findGame],
   gameController.buildSettelment
 );
 
-router.post('/:gid/player/:pid/buildCity', findGame, gameController.buildCity);
-router.post('/:gid/player/:pid/buildRoad', findGame, gameController.buildRoad);
+router.post('/:gid/buildCity', findGame, gameController.buildCity);
+router.post('/:gid/buildRoad', findGame, gameController.buildRoad);
 router.post(
   '/:gid/distributeResources',
   findGame,

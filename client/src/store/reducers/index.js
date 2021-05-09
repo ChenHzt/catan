@@ -1,40 +1,73 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export const gameBoardDimsReducer = (dims = {}, action) => {
-    if (action.type === 'GAME_BOARD_DIMS') {
-      return action.payload;
-    }
-  
-    return dims;
-  };
-
- export const gameDataReducer = (game = {}, action) => {
-    if (action.type === 'GAME_DATA') {
-      console.log(action.payload);
-      return action.payload;
-    }
-  
-    return game;
-  };
- export const userGamesReducer = (games = [], action) => {
-    if (action.type === 'USER_GAMES') {
-      return action.payload;
-    }
-  
-    return games;
-  };
-
-  export const gameDimsReducer = (dims={}, action) => {
-    if(action.type === 'GAME_DIMENTIONS')
-      return action.payload;
-    return dims;
+  if (action.type === "GAME_BOARD_DIMS") {
+    return action.payload;
   }
 
+  return dims;
+};
 
-  export default combineReducers({
-    game: gameDataReducer,
-    boardDims: gameBoardDimsReducer,
-    games: userGamesReducer,
-    gameDims: gameDimsReducer,
-  });
-  
+export const gameDataReducer = (game = {}, action) => {
+  if (action.type === "GAME_DATA") {
+    console.log(action.payload);
+    return action.payload;
+  }
+  if (action.type === "GET_BUILD_SUCCESS") {
+    console.log(action);
+    console.log("build settelment", action.data);
+    return action.data.game;
+  }
+
+  return game;
+};
+export const userGamesReducer = (games = [], action) => {
+  if (action.type === "USER_GAMES") {
+    return action.payload;
+  }
+
+  return games;
+};
+
+export const gameDimsReducer = (dims = {}, action) => {
+  if (action.type === "GAME_DIMENTIONS") return action.payload;
+  return dims;
+};
+
+export const validActionsReducer = (actions = [], action) => {
+  if (action.type === "VALID_ACTIONS") return action.payload;
+  return actions;
+};
+
+export const validPlacesForSettelmentsReducer = (locations = [], action) => {
+  if (action.type === "SETTELMENT_LOCATIONS") return action.payload;
+  return locations;
+};
+
+// errorReducer.js
+
+const initState = {
+  error: null,
+};
+
+export function errorReducer(state = initState, action) {
+  const { error } = action;
+
+  if (error || error==='') {
+    return {
+      error: error,
+    };
+  }
+
+  return state;
+}
+
+export default combineReducers({
+  game: gameDataReducer,
+  boardDims: gameBoardDimsReducer,
+  games: userGamesReducer,
+  gameDims: gameDimsReducer,
+  validActions: validActionsReducer,
+  locations: validPlacesForSettelmentsReducer,
+  error:errorReducer
+});

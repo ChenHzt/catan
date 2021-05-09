@@ -124,9 +124,13 @@ const GameSchema = new mongoose.Schema({
     type:String,
     enum:['SETUP_ROUND_1','SETUP_ROUND_2','GAME','END'],
     default:'SETUP_ROUND_1'
-
+  },
+  actionActive:{
+    type:String,
+    default:'NONE',
+    enum:['NONE','BUILD_SETTELMENT','BUILD_ROAD','BUILD_CITY','BUY_DEVELOPMENT_CARD']
   }
-});
+}); 
 
 const Game = mongoose.model("Game", GameSchema);
 

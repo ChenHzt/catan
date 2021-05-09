@@ -36,22 +36,24 @@ const createNewGame = async (req, res) => {
 const buildSettelment = async (req, res) => {
   try {
     const { game } = req;
-    const playerId = req.params.pid;
+    // const playerId = req.params.pid;
 
-    const player = await gameUtils.getPlayerData(playerId);
+    // const player = await gameUtils.getPlayerData(playerId);
+    const player = game.players[game.currentTurn];
 
     gameUtils.validations.validatePlayerHasAvailableSettelment(player);
     gameUtils.validations.validateLocationIsProvided(req.body);
     gameUtils.validations.validateLocationIsAvailable(game, req.body.location);
 
-    gameUtils.payWithResources(player, gameConsts.payments.settelment);
+    if(game.phase === 'Game')
+      gameUtils.payWithResources(player, gameConsts.payments.settelment);
 
     gameUtils.buildNewSettelment(player, game, req.body.location);
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
       await game.save();
-      await player.save();
+      // await player.save();
     });
 
     session.endSession();
@@ -65,9 +67,10 @@ const buildSettelment = async (req, res) => {
 const buildCity = async (req, res) => {
   try {
     const { game } = req;
-    const playerId = req.params.pid;
 
-    const player = await gameUtils.getPlayerData(playerId);
+
+    const player = game.players[game.currentTurn];
+
 
     gameUtils.validations.validatePlayerHasAvailableCities(player);
 
@@ -85,7 +88,7 @@ const buildCity = async (req, res) => {
 
     await session.withTransaction(async () => {
       await game.save();
-      await player.save();
+      // await player.save();
     });
 
     session.endSession();
@@ -99,9 +102,10 @@ const buildCity = async (req, res) => {
 const buildRoad = async (req, res) => {
   try {
     const { game } = req;
-    const playerId = req.params.pid;
+    // const playerId = req.params.pid;
 
-    const player = await gameUtils.getPlayerData(playerId);
+    const player = game.players[game.currentTurn];
+
 
     gameUtils.validations.validatePlayerHasAvailableRoads(player);
     gameUtils.validations.validateRoadLocationIsProvided(req.body);
@@ -114,7 +118,7 @@ const buildRoad = async (req, res) => {
 
     await session.withTransaction(async () => {
       await game.save();
-      await player.save();
+      // await player.save();
     });
 
     session.endSession();

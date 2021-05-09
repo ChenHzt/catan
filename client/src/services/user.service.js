@@ -13,6 +13,25 @@ class UserService {
     return await api.get(`/games/${gameId}`, { headers: authHeader() });
   }
 
+  async getValidActionsForCurrentPlayer(gameId) {
+    return await api.get(`/games/${gameId}/getValidActions`, { headers: authHeader() });
+  }
+
+  async getValidPlacesToBuildSettelments(gameId) {
+    return await api.get(`/games/${gameId}/getValidPlacesForSettelment`, { headers: authHeader() });
+  }
+
+  async getValidPlacesToBuildRoad(gameId) {
+    return await api.get(`/games/${gameId}/getValidPlacesForRoad`, { headers: authHeader() });
+  }
+
+  async getValidPlacesToBuildCity(gameId) {
+    return await api.get(`/games/${gameId}/getValidPlacesForCity`, { headers: authHeader() });
+  }
+
+  builtSettelment(gameId,location) {
+    return api.post(`/games/${gameId}/buildSettelment`,{location},{ headers: authHeader() })
+  }
   
 }
 

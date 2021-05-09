@@ -285,6 +285,7 @@ module.exports = {
     validatePlayerHasAvailableCities,
     validatePlayerHasAvailableRoads,
     validatePlayerHasSettelmentInLocation,
+    // validatePlayerIsAllowedToBuildRoadInLocation,
     validateDiceValueIsValid,
   },
 };

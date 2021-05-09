@@ -4,6 +4,8 @@ import GameBoard from "../../components/gameBoard/gameBoard.component";
 import {
   getGameData,
   setGamesDimentions,
+  getValidActions,
+  getPlacesForSettelment,
 } from "../../store/actions/gameActions";
 import Dice from "../../components/dice/dice.component";
 import { useParams } from "react-router-dom";
@@ -14,6 +16,7 @@ import {
 } from "../../helper";
 import PlayersContainer from "../../containers/players/players.container";
 import PlayerActionsContainer from "../../containers/actions/actions.container";
+import { startSession } from "mongoose";
 
 function Game(props) {
   const gameContainer = useRef(null);
@@ -47,9 +50,12 @@ function Game(props) {
     }
   }, [gameContainer.current]);
 
-  const firstRound = () => {
+  
+  useEffect(() => {
+    props.getValidActions(id)
+  },[props.game.currentTurn])
+  
 
-  };
 
   return (
     <StyledGridContainer>
@@ -63,6 +69,7 @@ function Game(props) {
       >
         {Object.keys(props.game).length && (
           <GameBoard
+            onAction={true}
             height={props.gameDims.height}
             width={props.gameDims.width}
             tileRadius={props.gameDims.tileRadius}
@@ -73,20 +80,22 @@ function Game(props) {
       <div style={{ gridArea: "nav" }}>
         <PlayersContainer />
       </div>
-      <div style={{ gridArea: "actions" }}>
-        <PlayerActionsContainer/>
+      <div style={{ gridArea: "actions"}}>
+        <PlayerActionsContainer actions={props.validActions}/>
       </div>
-      <div style={{ gridArea: "dice" }}></div>
+      <div style={{ gridArea: "dice" }}>
+        {props.error.error && props.error.error}
+      </div>
       <div style={{ gridArea: "resources" }}></div>
     </StyledGridContainer>
   );
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.gameDims);
-  return { game: state.game, gameDims: state.gameDims };
+  console.log(state.error.error);
+  return { game: state.game, gameDims: state.gameDims, validActions:state.validActions,error:state.error};
 };
 
-export default connect(mapStateToProps, { getGameData, setGamesDimentions })(
+export default connect(mapStateToProps, { getGameData, setGamesDimentions, getValidActions, getPlacesForSettelment })(
   Game
 );

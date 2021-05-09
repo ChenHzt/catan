@@ -3,11 +3,18 @@ import React, { useState, useEffect, useRef } from "react";
 import Tile from "../tile/tile.component";
 // import TileNumber from "../tileNumber/tileNumber.component";
 import { connect } from "react-redux";
-import { getGameData } from "../../store/actions/gameActions";
+import { getGameData, buildSettelment } from "../../store/actions/gameActions";
 import Settlement from "../vertix/settelment.component";
 import GameNode from "../vertix/vertix.component";
 import { calcTileNodesCenterPoint,getTileCenterPointByLocation } from "../../helper";
 const GameBoard = (props) => {
+
+  const onNodeClicked = (node) =>{
+    if(props.onAction){
+      props.buildSettelment(props.game._id,node)
+    }
+  }
+  
   const generateBoard = (tileRadius) => {
     const hexagonsArr = [];
     const temp = props.game.board.hexs.map((hex) => [
@@ -43,6 +50,8 @@ const GameBoard = (props) => {
         !DoneNodeSet.has(ver)
           ? arr.push(
               <GameNode
+                build={props.game.board.vertices[ver].build}
+                onClick={onNodeClicked}
                 node={ver}
                 radius="10"
                 center={calcTileNodesCenterPoint(hex.location, props.tileRadius, i)}
@@ -56,7 +65,7 @@ const GameBoard = (props) => {
     return arr;
   };
 
-  
+
 
   return (
     <svg width={'100%'} height={props.height} transform="scale(1)">
@@ -77,7 +86,8 @@ const GameBoard = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { game: state.game };
+  console.log(state.game);
+  return { game: state.game, locations:state.locations,error:state.error };
 };
 
-export default connect(mapStateToProps, { getGameData })(GameBoard);
+export default connect(mapStateToProps, { getGameData,buildSettelment })(GameBoard);
