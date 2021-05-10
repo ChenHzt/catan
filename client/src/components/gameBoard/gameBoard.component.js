@@ -8,7 +8,6 @@ import {
   buildRoad,
   setCurrentAction
 } from "../../store/actions/gameActions";
-import Settlement from "../vertix/settelment.component";
 import GameNode from "../vertix/vertix.component";
 import {
   calcTileNodesCenterPoint,
@@ -126,7 +125,7 @@ const GameBoard = (props) => {
 
   return (
     <svg width={"100%"} height={props.height} transform="scale(1)">
-      <image height={props.height} x="0" y="0" />
+      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.width - 590)/2} height={props.height} />
       <Group width={props.width} height={props.width}>
         <Group width={props.width} height={props.width}>
           {generateBoard()}

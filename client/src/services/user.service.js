@@ -40,8 +40,17 @@ class UserService {
   currentAction(gameId,action) {
     return api.post(`/games/${gameId}/currentAction`,{action},{ headers: authHeader() })
   }
+
   endTurn(gameId) {
     return api.post(`/games/${gameId}/endTurn`,{},{ headers: authHeader() })
+  }
+
+  rollDice(gameId) {
+    return api.post(`/games/${gameId}/endTurn`,{},{ headers: authHeader() })
+  }
+
+  distributeResources(gameId,dice) {
+    return api.post(`/games/${gameId}/distributeResources`,{dice},{ headers: authHeader() })
   }
   
 }

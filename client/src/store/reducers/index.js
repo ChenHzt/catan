@@ -21,6 +21,10 @@ export const gameDataReducer = (game = {}, action) => {
   if (action.type === "END_TURN") {
     return action.payload.game;
   }
+  if (action.type === "DISTRIBUTE_RESOURCES") {
+    console.log(action)
+    return action.payload.game;
+  }
 
   return game;
 };

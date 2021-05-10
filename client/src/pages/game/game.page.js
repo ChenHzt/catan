@@ -15,6 +15,8 @@ import {
 } from "../../helper";
 import PlayersContainer from "../../containers/players/players.container";
 import PlayerActionsContainer from "../../containers/actions/actions.container";
+import DiceContainer from "../../containers/dice/dice.container";
+import ResourcesContainer from "../../containers/resources/resources.container";
 
 function Game(props) {
   const gameContainer = useRef(null);
@@ -80,8 +82,11 @@ function Game(props) {
       </div>
       <div style={{ gridArea: "dice" }}>
         {props.error.error && props.error.error}
+        <DiceContainer/>
       </div>
-      <div style={{ gridArea: "resources" }}></div>
+      <div style={{ gridArea: "resources" }}>
+        <ResourcesContainer />
+      </div>
     </StyledGridContainer>
   );
 }

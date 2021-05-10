@@ -143,7 +143,7 @@ const resourceDistribution = async (req, res) => {
       gameUtils.getResourcesForPlayer(player, game, dice);
       player.save();
     });
-    res.status(200).json(game);
+    res.status(200).json({game});
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
@@ -286,6 +286,7 @@ const setCurrentAction = (req, res) => {
     res.status(400).send(e.message);
   }
 };
+
 const endTurn = (req, res) => {
   const { game } = req;
   try {

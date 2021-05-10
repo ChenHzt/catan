@@ -19,7 +19,7 @@ router.post('/:gid/buildCity', [auth,findGame], gameController.buildCity);
 router.post('/:gid/buildRoad', [auth,findGame], gameController.buildRoad);
 router.post(
   '/:gid/distributeResources',
-  findGame,
+  [auth,findGame],
   gameController.resourceDistribution
 );
 router.get('/:gid/getValidActions',[auth,findGame],gameController.getValidActionForPlayer)

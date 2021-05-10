@@ -178,6 +178,22 @@ export const endTurn = (gameid) => async dispatch =>{
       }
     })
     .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+}
 
+// export const rollDice = (gameId,diceValue) =>async dispatch =>{
 
+// }
+
+export const distributeResources = (gameId,diceValue) => async dispatch =>{
+  userService
+    .distributeResources(gameId,diceValue)
+    .then((res) =>{
+      try{
+        dispatch({type:'DISTRIBUTE_RESOURCES',payload:res.data})
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
 }
