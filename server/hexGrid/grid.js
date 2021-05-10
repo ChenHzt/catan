@@ -14,9 +14,7 @@ class Edge {
   constructor(id, vertices) {
     this.id = id;
     this.road = null;
-    // console.log(vertices);
     vertices.forEach((vertix, i, arr) => {
-      //   console.log('**', arr[(i + 1) % 2]);
       vertix.neighborVertices.push(arr[(i + 1) % 2]);
     });
   }
@@ -148,4 +146,3 @@ const edgesw = [
 ];
 
 const hexx = new HexGrid(19, verticesw, edgesw);
-console.log(hexx.hexs[0]);

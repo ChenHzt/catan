@@ -1,5 +1,4 @@
 const PlayerCard = (props) => {
-  console.log('hiiiii');
   return (
     <svg
     transform="scale(0.8) translate(-30,0)"

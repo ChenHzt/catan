@@ -10,6 +10,5 @@ export const setCurrentUser = user => {
 
 export const getUserGames = () => async dispatch => {
   const response = await userService.getUserData()
-  console.log(response);
   dispatch({ type: 'USER_GAMES', payload: response.data });
 };

@@ -39,13 +39,13 @@ const buildSettelment = async (req, res) => {
     // const playerId = req.params.pid;
 
     // const player = await gameUtils.getPlayerData(playerId);
-    const player = game.players[game.currentTurn];
+    const player = game.players[game.currentTurn - 1];
 
     gameUtils.validations.validatePlayerHasAvailableSettelment(player);
     gameUtils.validations.validateLocationIsProvided(req.body);
     gameUtils.validations.validateLocationIsAvailable(game, req.body.location);
 
-    if(game.phase === 'Game')
+    if (game.phase === "GAME")
       gameUtils.payWithResources(player, gameConsts.payments.settelment);
 
     gameUtils.buildNewSettelment(player, game, req.body.location);
@@ -53,7 +53,7 @@ const buildSettelment = async (req, res) => {
 
     await session.withTransaction(async () => {
       await game.save();
-      // await player.save();
+      await player.save();
     });
 
     session.endSession();
@@ -68,9 +68,7 @@ const buildCity = async (req, res) => {
   try {
     const { game } = req;
 
-
-    const player = game.players[game.currentTurn];
-
+    const player = game.players[game.currentTurn - 1];
 
     gameUtils.validations.validatePlayerHasAvailableCities(player);
 
@@ -80,7 +78,7 @@ const buildCity = async (req, res) => {
       player,
       req.body.location
     );
-    if(game.phase === 'Game')
+    if (game.phase === "Game")
       gameUtils.payWithResources(player, gameConsts.payments.city);
 
     gameUtils.upgradeSettelmentToCity(player, game, req.body.location);
@@ -88,7 +86,7 @@ const buildCity = async (req, res) => {
 
     await session.withTransaction(async () => {
       await game.save();
-      // await player.save();
+      await player.save();
     });
 
     session.endSession();
@@ -104,14 +102,16 @@ const buildRoad = async (req, res) => {
     const { game } = req;
     // const playerId = req.params.pid;
 
-    const player = game.players[game.currentTurn];
-
+    const player = game.players[game.currentTurn - 1];
 
     gameUtils.validations.validatePlayerHasAvailableRoads(player);
     gameUtils.validations.validateRoadLocationIsProvided(req.body);
-    gameUtils.validations.validateRoadLocationIsAvailable(game, req.body.location);
+    gameUtils.validations.validateRoadLocationIsAvailable(
+      game,
+      req.body.location
+    );
 
-    if(game.phase === 'Game')
+    if (game.phase === "Game")
       gameUtils.payWithResources(player, gameConsts.payments.road);
     gameUtils.buildRoad(player, game, req.body.location);
 
@@ -119,7 +119,7 @@ const buildRoad = async (req, res) => {
 
     await session.withTransaction(async () => {
       await game.save();
-      // await player.save();
+      await player.save();
     });
 
     session.endSession();
@@ -159,31 +159,35 @@ const getValidActionForPlayer = async (req, res) => {
         if (player.settelments.built.length === 0)
           actions.push("BUILD_SETTELMENT");
         else if (player.roads.built.length === 0) actions.push("BUILD_ROAD");
-        else
-          throw new Error(
-            "on first phase of the game each user can build 1 new settelment and 1 new road"
-          );
+
         break;
       case "SETUP_ROUND_2":
         if (player.settelments.built.length === 1)
           actions.push("BUILD_SETTELMENT");
         else if (player.roads.built.length === 1) actions.push("BUILD_ROAD");
-        else
-          throw new Error(
-            "on second phase of the game each user can build 1 new settelment and 1 new road"
-          );
+
         break;
       case "GAME":
-        if (player.resourceCards.wood >= 1 && player.resourceCards.brick >= 1)
+        if (
+          player.resourceCards.wood >= 1 &&
+          player.resourceCards.brick >= 1 &&
+          player.roads.available.length > 0
+        )
           actions.push("BUILD_ROAD");
         if (
           player.resourceCards.wood >= 1 &&
           player.resourceCards.brick >= 1 &&
           player.resourceCards.wheat >= 1 &&
-          player.resourceCards.sheep >= 1
+          player.resourceCards.sheep >= 1 &&
+          player.settelments.available.length > 0
         )
           actions.push("BUILD_SETTELMENT");
-        if (player.resourceCards.ore >= 3 && player.resourceCards.wheat >= 2)
+        if (
+          player.resourceCards.ore >= 3 &&
+          player.resourceCards.wheat >= 2 &&
+          player.settelments.built.length > 0 &&
+          player.cities.available.length > 0
+        )
           actions.push("BUILD_CITY");
         if (
           player.resourceCards.ore >= 1 &&
@@ -200,81 +204,105 @@ const getValidActionForPlayer = async (req, res) => {
 
 const getValidVerticesForPlayerToBuildSettelment = (req, res) => {
   const { game } = req;
-  
+
   const validVertices = [];
   try {
     for (let i = 0; i < game.board.vertices.length; i++) {
-      try{
+      try {
         switch (game.phase) {
           case "SETUP_ROUND_1":
           case "SETUP_ROUND_2":
           case "GAME":
             gameUtils.validations.validateLocationIsAvailable(game, i);
-            validVertices.push(i);      
+            validVertices.push(i);
             break;
-          //TODO: check if the user has road to there   
+          //TODO: check if the user has road to there
+        }
+      } catch (e) {
+        console.log(e.message);
       }
     }
-      catch(e){
-        console.log(e.message)
-      } 
-    }
-    res.status(200).send(validVertices)
+    res.status(200).send(validVertices);
   } catch (e) {
     res.status(400).send(e.message);
   }
 };
 
-
-const getValidEdgesForPlayerToBuildRoad = (req,res) =>{
-  const validEdges = []
-  const {Game} = req;
+const getValidEdgesForPlayerToBuildRoad = (req, res) => {
+  const validEdges = [];
+  const { Game } = req;
   try {
     for (let i = 0; i < game.board.edges.length; i++) {
-      try{
+      try {
         switch (game.phase) {
           case "SETUP_ROUND_1":
           case "SETUP_ROUND_2":
           case "GAME":
             gameUtils.validations.validateRoadLocationIsAvailable(game, i);
-            validEdges.push(i);      
+            validEdges.push(i);
             break;
-          //TODO: check if the user has road to there   
-      }
+          //TODO: check if the user has road to there
+        }
+      } catch (e) {}
     }
-      catch(e){
-      } 
-    }
-    res.status(200).send(validEdges)
+    res.status(200).send(validEdges);
   } catch (e) {
     res.status(400).send(e.message);
   }
-}
+};
 
-const getValidVerticesForPlayerToBuildCity = (req,res) =>{
-  const validVertices = []
-  const {game} = req;
+const getValidVerticesForPlayerToBuildCity = (req, res) => {
+  const validVertices = [];
+  const { game } = req;
   try {
     for (let i = 0; i < game.board.edges.length; i++) {
-      try{
+      try {
         switch (game.phase) {
           case "SETUP_ROUND_1":
           case "SETUP_ROUND_2":
           case "GAME":
-            gameUtils.validations.validatePlayerHasSettelmentInLocation(game.players[game.currentTurn-1],i);
-            validVertices.push(i);      
-            break;   
-      }
+            gameUtils.validations.validatePlayerHasSettelmentInLocation(
+              game.players[game.currentTurn - 1],
+              i
+            );
+            validVertices.push(i);
+            break;
+        }
+      } catch (e) {}
     }
-      catch(e){
-      } 
-    }
-    res.status(200).send(validVertices)
+    res.status(200).send(validVertices);
   } catch (e) {
     res.status(400).send(e.message);
   }
-}
+};
 
+const setCurrentAction = (req, res) => {
+  const { game } = req;
+  try {
+    game.actionActive = req.body.currentAction;
+    game.save();
+    res.status(200).send(game);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
+const endTurn = (req, res) => {
+  const { game } = req;
+  try {
+    if (game.phase === "SETUP_ROUND_1") {
+      if (game.currentTurn === game.players.length)
+        game.phase = "SETUP_ROUND_2";
+      else game.currentTurn = game.currentTurn + 1;
+    } else if (game.phase === "SETUP_ROUND_2") {
+      if (game.currentTurn === 1) game.phase = "GAME";
+      else game.currentTurn = game.currentTurn - 1;
+    } else game.currentTurn = (game.currentTurn % game.players.length) + 1;
+    game.save();
+    res.status(200).send({ game });
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
 
 module.exports = {
   createNewGame,
@@ -287,4 +315,6 @@ module.exports = {
   getValidVerticesForPlayerToBuildSettelment,
   getValidEdgesForPlayerToBuildRoad,
   getValidVerticesForPlayerToBuildCity,
+  setCurrentAction,
+  endTurn,
 };

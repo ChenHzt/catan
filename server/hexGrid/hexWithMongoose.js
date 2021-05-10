@@ -67,7 +67,6 @@ const initializeBoard = () => {
 };
 
 const initializeGame = () => {
-  console.log('deedeede');
   const players = [];
   for (let i = 0; i < 4; i++) {
     players.push(initializePlayer(i));

@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 function UserPage(props) {
   const history = useHistory();
 
-  useEffect(() => console.log(props.games),[props.games]);
-
     useEffect(()=>{
         const userData = AuthService.getCurrentUser();
         if (userData) {

@@ -10,18 +10,16 @@ export const gameBoardDimsReducer = (dims = {}, action) => {
 
 export const gameDataReducer = (game = {}, action) => {
   if (action.type === "GAME_DATA") {
-    console.log(action.payload);
     return action.payload;
   }
   if (action.type === "GET_BUILD_SETTELMENT_SUCCESS") {
-    // console.log(action);
-    // console.log("build settelment", action.data);
     return action.data.game;
   }
   if (action.type === "GET_BUILD_ROAD_SUCCESS") {
-    // console.log(action);
-    console.log("build road", action.data);
     return action.data.game;
+  }
+  if (action.type === "END_TURN") {
+    return action.payload.game;
   }
 
   return game;

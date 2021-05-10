@@ -47,10 +47,10 @@ function Game(props) {
       };
     }
   }, [gameContainer.current]);
-  
+
   useEffect(() => {
-    props.getValidActions(id)
-  },[props.game.currentTurn])
+    props.getValidActions(id);
+  }, [props.game.currentTurn, props.currentAction]);
 
   return (
     <StyledGridContainer>
@@ -75,8 +75,8 @@ function Game(props) {
       <div style={{ gridArea: "nav" }}>
         <PlayersContainer />
       </div>
-      <div style={{ gridArea: "actions"}}>
-        <PlayerActionsContainer actions={props.validActions}/>
+      <div style={{ gridArea: "actions" }}>
+        <PlayerActionsContainer gameId={id} actions={props.validActions} />
       </div>
       <div style={{ gridArea: "dice" }}>
         {props.error.error && props.error.error}
@@ -87,10 +87,19 @@ function Game(props) {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.error.error);
-  return { game: state.game, gameDims: state.gameDims, validActions:state.validActions,error:state.error};
+  console.log(state.currentAction);
+  return {
+    game: state.game,
+    gameDims: state.gameDims,
+    currentAction: state.currentAction,
+    validActions: state.validActions,
+    error: state.error,
+  };
 };
 
-export default connect(mapStateToProps, { getGameData, setGamesDimentions, getValidActions, getPlacesForSettelment })(
-  Game
-);
+export default connect(mapStateToProps, {
+  getGameData,
+  setGamesDimentions,
+  getValidActions,
+  getPlacesForSettelment,
+})(Game);

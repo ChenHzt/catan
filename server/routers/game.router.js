@@ -26,4 +26,6 @@ router.get('/:gid/getValidActions',[auth,findGame],gameController.getValidAction
 router.get('/:gid/getValidPlacesForSettelment',[auth,findGame],gameController.getValidVerticesForPlayerToBuildSettelment);
 router.get('/:gid/getValidPlacesForRoad',[auth,findGame],gameController.getValidEdgesForPlayerToBuildRoad);
 router.get('/:gid/getValidPlacesForCity',[auth,findGame],gameController.getValidVerticesForPlayerToBuildCity);
+router.post('/:gid/currentAction',[auth,findGame],gameController.setCurrentAction);
+router.post('/:gid/endTurn',[auth,findGame],gameController.endTurn);
 module.exports = router;

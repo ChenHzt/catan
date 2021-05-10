@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 
 const GameEdge = (props) => {
-  const { edge, center, slope, size, build } = props;
+  const { edge, center, slope, size, build, currentAction} = props;
   const [hover, setHover] = useState(false);
   const len = size * 0.6;
-  console.log(props);
 
   const renderRoad = () => {
     if (build !== null) {
@@ -24,7 +23,7 @@ const GameEdge = (props) => {
 
   return (
     <svg
-      onClick={() => props.onClick(edge)}
+      onClick={() => currentAction==='BUILD_ROAD'? props.onClick(edge):null}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
@@ -35,7 +34,7 @@ const GameEdge = (props) => {
         height={10}
         fill="lightgreen"
         transform={`rotate(${slope},${center.x},${center.y})`}
-        fillOpacity={hover ? 1.0 : 0.0}
+        fillOpacity={hover && currentAction==='BUILD_ROAD' ? 1.0 : 0.0}
       />
 
       {renderRoad()}

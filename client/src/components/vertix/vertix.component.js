@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 
 const GameNode = (props) => {
-  const { node, center, radius, onClick, build } = props;
+  const { node, center, radius, onClick, build,currentAction } = props;
   const [hover, setHover] = useState(false);
 
   const renderSettlement = () => {
@@ -21,21 +21,20 @@ const GameNode = (props) => {
   };
   return (
     <svg
-      onClick={() => onClick(node)}
+      onClick={() => currentAction==='BUILD_SETTELMENT' ? onClick(node) : null}
       width={2 * radius}
       height={2 * radius}
       x={center.x - radius}
       y={center.y - radius}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      // onClick={() => onClick(node)}
     >
       <circle
         cx={`${radius}`}
         cy={`${radius}`}
         r={radius}
         fill="black"
-        fillOpacity={hover ? 1.0 : 0.0}
+        fillOpacity={hover && currentAction==='BUILD_SETTELMENT' ? 1.0 : 0.0}
       />
 
       {renderSettlement()}

@@ -17,7 +17,6 @@ function Login(props) {
   const handleLogin = async () => {
     try {
       const userData = await AuthService.login(email, password);
-      // console.log(userData);
       props.setCurrentUser(userData.user);
 
       history.push(`/profile`);

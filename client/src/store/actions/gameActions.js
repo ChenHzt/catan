@@ -25,7 +25,6 @@ export const getGameData = (gameid) => async (dispatch) => {
 };
 
 export const setGamesDimentions = (width, height) => {
-  console.log(width, height);
   const tileRadius = height / 10;
   const centerLine = width / 2;
   const topRowX = height / 2 - 3 * tileRadius;
@@ -55,7 +54,6 @@ export const getValidActions = (gameid) => async (dispatch) => {
 export const getPlacesForSettelment = (gameid) => async (dispatch) => {
   try {
     const response = await userService.getValidPlacesToBuildSettelments(gameid);
-    console.log(response.data);
     dispatch({ type: `SETTELMENT_LOCATIONS`, payload: response.data });
   } catch (e) {
     console.log(e.message);
@@ -154,9 +152,32 @@ export const buildRoad = (gameid, location) => async (dispatch) => {
 };
 
 export const setCurrentAction = (gameid,actionType) => async dispatch =>{
-  try{
-    const response = await userService.setCurrentAction(gameid,actionType);
-    dispatch({type:'SET_CURRENT_ACTION',payload:actionType})
-  }
-  catch(e) {console.log(e).message};
+    userService
+    .currentAction(gameid,actionType)
+    .then((res) => {
+      try{
+        dispatch({type:'SET_CURRENT_ACTION',payload:actionType})
+      }
+      catch(e) {
+        console.log(res,e);
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+
+
+}
+export const endTurn = (gameid) => async dispatch =>{
+    userService
+    .endTurn(gameid)
+    .then((res) => {
+      try{
+        dispatch({type:'END_TURN',payload:res.data})
+      }
+      catch(e) {
+        console.log(res,e);
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+
+
 }
