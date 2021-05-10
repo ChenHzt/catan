@@ -40,9 +40,12 @@ const VertixSchema = new mongoose.Schema({
   build: {
     type: {
       player: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Player",
+        type: Number,
       },
+      buildType:{
+        type:String,
+        enum:['settelment','city']
+      }
     },
     default: null,
   },
@@ -62,8 +65,7 @@ const EdgeSchema = new mongoose.Schema({
   road: {
     type: {
       player: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Player",
+        type: Number,
       },
     },
     default: null,

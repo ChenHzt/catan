@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {playersColors} from '../../consts'
 
 const GameNode = (props) => {
   const { node, center, radius, onClick, build,currentAction } = props;
@@ -9,7 +9,7 @@ const GameNode = (props) => {
     if (build && build.type === "settelment")
       return (
         <image
-        xlinkHref={"/static/images/pices/settelments/blue.svg"}
+        xlinkHref={`/static/images/pices/settelments/${playersColors[build.player-1]}.svg`}
          height={20}
          width={20}
         x="0"

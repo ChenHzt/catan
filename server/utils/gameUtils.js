@@ -187,7 +187,7 @@ const buildNewSettelment = (player, game, location) => {
   player.settelments.built.push(settelmentItem);
 
   game.board.vertices[location].build = {
-    player: player._id,
+    player: game.currentTurn,
     type: 'settelment',
     id: settelmentItem._id,
   };
@@ -212,7 +212,7 @@ const upgradeSettelmentToCity = (player, game, location) => {
   player.cities.built.push(cityItem);
 
   game.board.vertices[location].build = {
-    player: player._id,
+    player: game.currentTurn,
     type: 'city',
     id: cityItem._id,
   };
@@ -225,7 +225,7 @@ const buildRoad = (player, game, roadLocation) => {
   player.roads.built.push(roadItem);
 
   game.board.edges[roadLocation].road = {
-    player: player._id,
+    player: game.currentTurn,
     type: 'road',
     id: roadItem._id,
   };

@@ -1,19 +1,22 @@
 import React, { useState } from "react";
+import {playersColors} from '../../consts'
 
 const GameEdge = (props) => {
   const { edge, center, slope, size, build, currentAction} = props;
   const [hover, setHover] = useState(false);
-  const len = size * 0.6;
+  const len = size * 0.5;
 
   const renderRoad = () => {
     if (build !== null) {
       return (
         <rect
           x={center.x - len / 2}
-          y={center.y - 5}
+          y={center.y - 4}
           width={len}
-          height={15}
-          fill="lightgreen"
+          height={8}
+          strokeWidth={1}
+          stroke={'#000000'}
+          fill={playersColors[build.player-1]}
           transform={`rotate(${slope},${center.x},${center.y})`}
 
         />
