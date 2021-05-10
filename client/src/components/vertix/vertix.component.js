@@ -9,9 +9,9 @@ const GameNode = (props) => {
     if (build && build.type === "settelment")
       return (
         <image
-        xlinkHref={`/static/images/pices/settelments/${playersColors[build.player-1]}.svg`}
-         height={20}
-         width={20}
+        xlinkHref={`/static/images/pices/settelments/${playersColors[build.player-1].name}.svg`}
+         height={radius*2}
+         width={radius*2}
         x="0"
         y="0"
       />

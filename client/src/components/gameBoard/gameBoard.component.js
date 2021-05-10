@@ -72,7 +72,7 @@ const GameBoard = (props) => {
                 build={props.game.board.vertices[ver].build}
                 onClick={onNodeClicked}
                 node={ver}
-                radius="10"
+                radius="12"
                 center={calcTileNodesCenterPoint(
                   hex.location,
                   props.tileRadius,
