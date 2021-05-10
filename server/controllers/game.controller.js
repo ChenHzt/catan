@@ -78,7 +78,7 @@ const buildCity = async (req, res) => {
       player,
       req.body.location
     );
-    if (game.phase === "Game")
+    if (game.phase === "GAME")
       gameUtils.payWithResources(player, gameConsts.payments.city);
 
     gameUtils.upgradeSettelmentToCity(player, game, req.body.location);
@@ -111,7 +111,7 @@ const buildRoad = async (req, res) => {
       req.body.location
     );
 
-    if (game.phase === "Game")
+    if (game.phase === "GAME")
       gameUtils.payWithResources(player, gameConsts.payments.road);
     gameUtils.buildRoad(player, game, req.body.location);
 
