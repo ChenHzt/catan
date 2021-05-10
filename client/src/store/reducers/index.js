@@ -67,6 +67,12 @@ export function errorReducer(state = initState, action) {
   return state;
 }
 
+export const currentActionReducer = (currentActionType='', action) =>{
+  if(action.type==='SET_CURRENT_ACTION')
+    return action.payload;
+  else return currentActionType
+}
+
 export default combineReducers({
   game: gameDataReducer,
   boardDims: gameBoardDimsReducer,
@@ -74,5 +80,6 @@ export default combineReducers({
   gameDims: gameDimsReducer,
   validActions: validActionsReducer,
   locations: validPlacesForSettelmentsReducer,
-  error:errorReducer
+  error:errorReducer,
+  currentAction:currentActionReducer
 });

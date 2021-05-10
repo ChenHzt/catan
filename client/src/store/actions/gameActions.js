@@ -152,3 +152,11 @@ export const buildRoad = (gameid, location) => async (dispatch) => {
       .catch((err) => dispatch(loadBuildRoadError(err.response.data.error)));
 
 };
+
+export const setCurrentAction = (gameid,actionType) => async dispatch =>{
+  try{
+    const response = await userService.setCurrentAction(gameid,actionType);
+    dispatch({type:'SET_CURRENT_ACTION',payload:actionType})
+  }
+  catch(e) {console.log(e).message};
+}

@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "development") {
 
 if (process.env.NODE_ENV === "production") {
   console.log(process.env.PORT);
-  url = "api";
+  url = "/api";
 }
 const api = axios.create({
   baseURL: url,

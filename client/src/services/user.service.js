@@ -36,6 +36,10 @@ class UserService {
   buildRoad(gameId,location) {
     return api.post(`/games/${gameId}/buildRoad`,{location},{ headers: authHeader() })
   }
+
+  currentAction(gameId,action) {
+    return api.post(`/games/${gameId}/currentAction`,{action},{ headers: authHeader() })
+  }
   
 }
 
