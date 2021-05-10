@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import {setCurrentAction,endTurn} from '../../store/actions/gameActions'
+import { StyledGameButton } from "../../style";
 
 const PlayerActionsContainer = (props) => {
   const actions = {};
@@ -21,17 +22,16 @@ const PlayerActionsContainer = (props) => {
     }
   });
 
-  const endTurn = () => {};
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{ display: "flex",padding:'20px', gridArea:props.gridArea,flexDirection: "column", alignItems: "center" }}
     >
-      {actions.road && <button onClick={() => props.setCurrentAction(props.gameId,'BUILD_ROAD')}> new road</button>}
-      {actions.settelment && <button onClick={() => props.setCurrentAction(props.gameId,'BUILD_SETTELMENT')}> new settelment</button>}
-      {actions.city && <button onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</button>}
-      {actions.developmentCard && <button onClick={() => props.setCurrentAction(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</button>}
-      <button onClick={() => props.endTurn(props.gameId)}>end turn</button>
+      {actions.road && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_ROAD')}> new road</StyledGameButton>}
+      {actions.settelment && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_SETTELMENT')}> new settelment</StyledGameButton>}
+      {actions.city && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</StyledGameButton>}
+      {actions.developmentCard && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</StyledGameButton>}
+      <StyledGameButton onClick={() => props.endTurn(props.gameId)}>end turn</StyledGameButton>
     </div>
   );
 };

@@ -125,7 +125,7 @@ const GameBoard = (props) => {
 
   return (
     <svg width={"100%"} height={props.height} transform="scale(1)">
-      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.width - 590)/2} height={props.height} />
+      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.width - 662)/2} height={props.height} />
       <Group width={props.width} height={props.width}>
         <Group width={props.width} height={props.width}>
           {generateBoard()}

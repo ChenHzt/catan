@@ -73,20 +73,18 @@ function Game(props) {
           />
         )}
       </div>
-      <div style={{ gridArea: "players" }}></div>
-      <div style={{ gridArea: "nav" }}>
-        <PlayersContainer />
-      </div>
-      <div style={{ gridArea: "actions" }}>
-        <PlayerActionsContainer gameId={id} actions={props.validActions} />
-      </div>
-      <div style={{ gridArea: "dice" }}>
-        {props.error.error && props.error.error}
-        <DiceContainer/>
-      </div>
-      <div style={{ gridArea: "resources" }}>
-        <ResourcesContainer />
-      </div>
+      {/* {props.error.error && props.error.error} */}
+
+      <PlayersContainer gridArea='players' />
+
+        <PlayerActionsContainer
+          gridArea='actions'
+          gameId={id}
+          actions={props.validActions}
+        />
+        <DiceContainer gridArea='dice' />
+        <ResourcesContainer gridArea='resources' />
+
     </StyledGridContainer>
   );
 }

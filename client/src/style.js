@@ -45,3 +45,10 @@ export const StyledLink = styled.button`
     cursor:pointer;
     
 `
+
+export const StyledGameButton = styled.button`
+    width:100%;
+    padding:5px;
+    margin:2px 0;
+    border-radius: 10px;
+`
