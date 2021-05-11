@@ -2,6 +2,7 @@ import api from "../../api/api";
 // import api from 'axios';
 import userService from "../../services/user.service";
 import { calcTileCenterByLocationMap } from "../../helper";
+
 export const setBoardGameDims = (dims) => {
   // Return an action
   return {
@@ -287,6 +288,36 @@ export const placeRobber = (gameId,hexId) => async dispatch =>{
     .then((res) =>{
       try{
         dispatch({type:'PLACE_ROBBER',payload:res.data})
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+}
+
+export const buyDevelopmentCard = (gameId) => async dispatch =>{
+
+  userService
+    .buyDevelopmentCard(gameId)
+    .then((res) =>{
+      try{
+        dispatch({type:'BUY_DEVELOPMENT_CARD',payload:res.data})
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+}
+
+export const activateKnight = (gameId,location) => async dispatch =>{
+
+  userService
+    .activateKnight(gameId,location)
+    .then((res) =>{
+      try{
+        dispatch({type:'ACTIVATE_KNIGHT',payload:res.data})
       }
       catch(err) {
         console.log(err.message)
