@@ -29,4 +29,6 @@ router.get('/:gid/getValidPlacesForCity',[auth,findGame],gameController.getValid
 router.post('/:gid/currentAction',[auth,findGame],gameController.setCurrentAction);
 router.post('/:gid/endTurn',[auth,findGame],gameController.endTurn);
 router.post('/:gid/placeRobber',[auth,findGame],gameController.placeRobber);
+router.post('/:gid/buyDevelopmentCard',[auth,findGame],gameController.buyDevelopmentCard);
+router.post('/:gid/activateKnight',[auth,findGame],gameController.activateKnightCard);
 module.exports = router;

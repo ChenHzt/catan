@@ -197,6 +197,8 @@ const getValidActionForPlayer = async (req, res) => {
           player.resourceCards.sheep >= 1
         )
           actions.push("BUY_DEVELOPMENT_CARD");
+        if(player.developmentCards.knights > 0)
+          actions.push('ACTIVATE_KNIGHT')
     }
     res.status(200).send(actions);
   } catch (e) {
@@ -321,6 +323,35 @@ const placeRobber = (req, res) => {
   }
 };
 
+const buyDevelopmentCard = (req, res) => {
+  const { game } = req;
+  try {
+    const player = game.players[game.currentTurn -1] 
+    player.developmentCards.knights += 1;
+    game.save();
+    player.save();
+    res.status(200).send({ game });
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
+
+const activateKnightCard = (req, res) => {
+  const { game } = req;
+  try {
+    const player = game.players[game.currentTurn -1];
+    player.developmentCards.knights -= 1;
+    const prevRobber = game.board.hexs.find(hex => hex.robber===true);
+    prevRobber ? prevRobber.robber=false : null;
+    game.board.hexs[req.body.hexId].robber=true;
+    game.save();
+    player.save();
+    res.status(200).send({ game });
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
+
 module.exports = {
   createNewGame,
   getGameData,
@@ -334,5 +365,7 @@ module.exports = {
   getValidVerticesForPlayerToBuildCity,
   setCurrentAction,
   endTurn,
-  placeRobber
+  placeRobber,
+  buyDevelopmentCard,
+  activateKnightCard
 };

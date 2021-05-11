@@ -31,6 +31,14 @@ export const gameDataReducer = (game = {}, action) => {
     return action.payload.game;
   }
   if (action.type === "PLACE_ROBBER") {
+    // console.log(action)
+    return action.payload.game;
+  }
+  if (action.type === "ACTIVATE_KNIGHT") {
+    // console.log(action)
+    return action.payload.game;
+  }
+  if (action.type === "BUY_DEVELOPMENT_CARD") {
     console.log(action)
     return action.payload.game;
   }

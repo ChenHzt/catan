@@ -8,7 +8,8 @@ import {
   buildRoad,
   buildCity,
   setCurrentAction,
-  placeRobber
+  placeRobber,
+  activateKnight
 } from "../../store/actions/gameActions";
 import GameNode from "../vertix/vertix.component";
 import {
@@ -39,6 +40,10 @@ const GameBoard = (props) => {
   const placeRobber = (tile) =>{
     if(props.currentAction === 'PLACE_ROBBER'){
       props.placeRobber(props.game._id, tile.hexId);
+      props.setCurrentAction(props.game._id,'NONE');      
+    }
+    if(props.currentAction === 'ACTIVATE_KNIGHT'){
+      props.activateKnight(props.game._id, tile.hexId);
       props.setCurrentAction(props.game._id,'NONE');      
     }
   }
@@ -166,5 +171,6 @@ export default connect(mapStateToProps, {
   buildRoad,
   setCurrentAction,
   placeRobber,
-  buildCity
+  buildCity,
+  activateKnight
 })(GameBoard);

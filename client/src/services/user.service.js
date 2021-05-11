@@ -64,6 +64,16 @@ class UserService {
   createNewGame(players){
     return api.post(`/games`,{players},{ headers: authHeader() })
   }
+
+  buyDevelopmentCard(gameId){
+    return api.post(`/games/${gameId}/buyDevelopmentCard`,{},{ headers: authHeader() })
+  }
+  
+  activateKnight(gameId,location){
+    return api.post(`/games/${gameId}/activateKnight`,{hexId:location},{ headers: authHeader() })
+  }
+  
+  
   
 }
 

@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import {setCurrentAction,endTurn} from '../../store/actions/gameActions'
+import {setCurrentAction,endTurn, buyDevelopmentCard} from '../../store/actions/gameActions'
 import { StyledGameButton } from "../../style";
 
 const PlayerActionsContainer = (props) => {
@@ -20,6 +20,9 @@ const PlayerActionsContainer = (props) => {
       case "BUY_DEVELOPMENT_CARD":
         actions.developmentCard = true;
         break;
+      case "ACTIVATE_KNIGHT":
+        actions.activateKnight = true;
+        break;
     }
   });
 
@@ -32,7 +35,8 @@ const PlayerActionsContainer = (props) => {
       {actions.road && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_ROAD')}> new road</StyledGameButton>}
       {actions.settelment && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_SETTELMENT')}> new settelment</StyledGameButton>}
       {actions.city && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</StyledGameButton>}
-      {actions.developmentCard && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</StyledGameButton>}
+      {actions.developmentCard && <StyledGameButton onClick={() => props.buyDevelopmentCard(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</StyledGameButton>}
+      {actions.activateKnight && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'ACTIVATE_KNIGHT')}>use knight card</StyledGameButton>}
       {props.game && (props.game.dice!==0 || (props.game.phase !=='GAME' && Object.keys(actions).length===0))  &&<StyledGameButton onClick={() => props.endTurn(props.gameId)}>end turn</StyledGameButton>}
     </div>
   );
@@ -42,6 +46,6 @@ const mapStateToProps = (state) => {
   return {game:state.game, currentAction: state.currentAction,error:state.error.error};
 };
 
-export default connect(mapStateToProps, { setCurrentAction, endTurn })(
+export default connect(mapStateToProps, { setCurrentAction, endTurn,buyDevelopmentCard })(
   PlayerActionsContainer
 );
