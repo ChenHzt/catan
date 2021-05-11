@@ -11,8 +11,18 @@ export const setBoardGameDims = (dims) => {
 };
 
 export const createNewGame = (players) => async (dispatch) => {
-  const response = await api.post(`/games`, players);
-  dispatch({ type: `CREATE_NEW_GAME`, payload: response.data });
+  console.log(players)
+  userService
+    .createNewGame(players)
+    .then((res) =>{
+      try{
+        dispatch({type:'CREATE_NEW_GAME',payload:{game:res.data}})
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
 };
 
 export const getGameData = (gameid) => async (dispatch) => {

@@ -12,6 +12,9 @@ export const gameDataReducer = (game = {}, action) => {
   if (action.type === "GAME_DATA") {
     return action.payload;
   }
+  if (action.type === "CREATE_NEW_GAME") {
+    return action.payload.game;
+  }
   if (action.type === "GET_BUILD_SETTELMENT_SUCCESS") {
     return action.data.game;
   }
