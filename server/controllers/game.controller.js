@@ -308,6 +308,19 @@ const endTurn = (req, res) => {
   }
 };
 
+const placeRobber = (req, res) => {
+  const { game } = req;
+  try {
+    const prevRobber = game.board.hexs.find(hex => hex.robber===true);
+    prevRobber.robber=false;
+    game.board.hexs[req.body.hexId].robber=true
+    game.save();
+    res.status(200).send({ game });
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
+
 module.exports = {
   createNewGame,
   getGameData,
@@ -321,4 +334,5 @@ module.exports = {
   getValidVerticesForPlayerToBuildCity,
   setCurrentAction,
   endTurn,
+  placeRobber
 };

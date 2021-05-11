@@ -22,6 +22,9 @@ export const gameDataReducer = (game = {}, action) => {
     return action.payload.game;
   }
   if (action.type === "DISTRIBUTE_RESOURCES") {
+    return action.payload.game;
+  }
+  if (action.type === "PLACE_ROBBER") {
     console.log(action)
     return action.payload.game;
   }

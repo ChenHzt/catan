@@ -6,7 +6,8 @@ import {
   getGameData,
   buildSettelment,
   buildRoad,
-  setCurrentAction
+  setCurrentAction,
+  placeRobber
 } from "../../store/actions/gameActions";
 import GameNode from "../vertix/vertix.component";
 import {
@@ -18,17 +19,24 @@ import GameEdge from "../edge/edge.component";
 
 const GameBoard = (props) => {
   const onNodeClicked = (node) => {
-    if (props.onAction) {
+    if (props.currentAction === 'BUILD_SETTELMENT') {
       props.buildSettelment(props.game._id, node);
       props.setCurrentAction(props.game._id,'NONE');
     }
   };
   const onEdgeClicked = (edge) => {
-    if (props.onAction) {
+    if (props.currentAction === 'BUILD_ROAD') {
       props.buildRoad(props.game._id, edge.edgeId);
       props.setCurrentAction(props.game._id,'NONE');
     }
   };
+
+  const placeRobber = (tile) =>{
+    if(props.currentAction === 'PLACE_ROBBER'){
+      props.placeRobber(props.game._id, tile.hexId);
+      props.setCurrentAction(props.game._id,'NONE');      
+    }
+  }
 
   const generateBoard = (tileRadius) => {
     const hexagonsArr = [];
@@ -41,6 +49,7 @@ const GameBoard = (props) => {
     tileMap.forEach((tile, locationStr) => {
       hexagonsArr.push(
         <Tile
+          onClick={placeRobber}
           tile={tile}
           center={getTileCenterPointByLocation(JSON.parse(locationStr))}
           size={props.tileRadius}
@@ -151,4 +160,5 @@ export default connect(mapStateToProps, {
   buildSettelment,
   buildRoad,
   setCurrentAction,
+  placeRobber
 })(GameBoard);

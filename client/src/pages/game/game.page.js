@@ -6,6 +6,7 @@ import {
   setGamesDimentions,
   getValidActions,
   getPlacesForSettelment,
+  placeRobber,
 } from "../../store/actions/gameActions";
 import { useParams } from "react-router-dom";
 import { StyledGridContainer } from "./style";
@@ -53,6 +54,8 @@ function Game(props) {
   useEffect(() => {
     props.getValidActions(id);
   }, [props.game.currentTurn, props.currentAction]);
+
+ 
 
   return (
     <StyledGridContainer>
@@ -105,4 +108,5 @@ export default connect(mapStateToProps, {
   setGamesDimentions,
   getValidActions,
   getPlacesForSettelment,
+  placeRobber
 })(Game);
