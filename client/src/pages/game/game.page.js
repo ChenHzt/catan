@@ -57,7 +57,7 @@ function Game(props) {
 
   useEffect(() => {
     props.getValidActions(id);
-  }, [props.game.currentTurn, props.currentAction]);
+  }, [props.game.currentTurn, props.currentAction,props.game.phase]);
 
  
 
