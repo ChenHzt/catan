@@ -56,6 +56,10 @@ class UserService {
   placeRobber(gameId,hexId){
     return api.post(`/games/${gameId}/placeRobber`,{hexId},{ headers: authHeader() })
   }
+
+  createNewGame(players){
+    return api.post(`/games`,{players},{ headers: authHeader() })
+  }
   
 }
 

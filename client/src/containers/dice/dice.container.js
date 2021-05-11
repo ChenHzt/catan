@@ -14,10 +14,12 @@ class DiceContainer extends React.Component {
     this.state = {
       dice1: 0,
       dice2: 0,
+      showRollBtn:false
     };
   }
   componentDidUpdate() {
     if (this.state.dice1 !== 0 && this.state.dice2 !== 0) {
+      // this.setState({showRollBtn:false})
       this.props.rollDice(
         this.props.game._id,
         this.state.dice1 + this.state.dice2
@@ -31,6 +33,7 @@ class DiceContainer extends React.Component {
   rollDice() {
     this.reactDice1.rollAll();
     this.reactDice2.rollAll();
+    // this.setState({showRollBtn:false})
   }
   render() {
     return (
@@ -65,7 +68,7 @@ class DiceContainer extends React.Component {
             rollTime={1}
           />
         </div>
-        {this.props.game.dice ===0 && (
+        {this.props.game.phase==='GAME' && this.props.game.dice ===0 && (
           <StyledGameButton onClick={() => this.rollDice()}>
             roll
           </StyledGameButton>

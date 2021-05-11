@@ -21,7 +21,11 @@ import ResourcesContainer from "../../containers/resources/resources.container";
 
 function Game(props) {
   const gameContainer = useRef(null);
-  const { id } = useParams();
+  let id;
+  
+  id  = useParams().id;
+  if(!id) id=props.gameId;
+
   useEffect(() => {
     const getData = async () => {
       await props.getGameData(id);
@@ -53,7 +57,7 @@ function Game(props) {
 
   useEffect(() => {
     props.getValidActions(id);
-  }, [props.game.currentTurn, props.currentAction]);
+  }, [props.game.currentTurn, props.currentAction,props.game.phase]);
 
  
 
@@ -69,7 +73,6 @@ function Game(props) {
       >
         {Object.keys(props.game).length && (
           <GameBoard
-            onAction={true}
             height={props.gameDims.height}
             width={props.gameDims.width}
             tileRadius={props.gameDims.tileRadius}
