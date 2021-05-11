@@ -33,6 +33,10 @@ class UserService {
     return api.post(`/games/${gameId}/buildSettelment`,{location},{ headers: authHeader() })
   }
 
+  buildCity(gameId,location) {
+    return api.post(`/games/${gameId}/buildCity`,{location},{ headers: authHeader() })
+  }
+
   buildRoad(gameId,location) {
     return api.post(`/games/${gameId}/buildRoad`,{location},{ headers: authHeader() })
   }

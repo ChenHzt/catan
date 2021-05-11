@@ -115,6 +115,51 @@ export const buildSettelment = (gameid, location) => async (dispatch) => {
       .catch((err) => dispatch(loadBuildError(err.response.data.error)));
 
 };
+// todoTypes.js
+export const GET_BUILD_CITY_REQUEST = "GET_BUILD_CITY_REQUEST";
+export const GET_BUILD_CITY_SUCCESS = "GET_BUILD_CITY_SUCCESS";
+export const GET_BUILD_CITY_ERROR = "GET_BUILD_CITY_ERROR";
+
+// todoActions.js
+export function loadBuildCityRequest() {
+  return {
+    type: GET_BUILD_REQUEST,
+    error: ''
+  };
+}
+
+export function loadBuildCitySuccess(results) {
+  return {
+    type: GET_BUILD_SUCCESS,
+    data: results,
+    error: '',
+  };
+}
+
+export function loadBuildCityError(error) {
+  return {
+    type: GET_BUILD_ERROR,
+    data: null,
+    error: error,
+  };
+}
+
+export const buildCity = (gameid, location) => async (dispatch) => {
+ 
+    dispatch(loadBuildCityRequest());
+    let response;
+
+    userService
+      .buildCity(gameid, location)
+      .then((res) => {
+        try {
+        if (res.status === 200) dispatch(loadBuildCitySuccess(res.data));
+        }
+        catch(e){ console.log(res,e)}
+      })
+      .catch((err) => dispatch(loadBuildCityError(err.response.data.error)));
+
+};
 
 // todoTypes.js
 export const GET_BUILD_ROAD_REQUEST = "GET_BUILD_ROAD_REQUEST";

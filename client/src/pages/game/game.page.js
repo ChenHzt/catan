@@ -79,7 +79,6 @@ function Game(props) {
           />
         )}
       </div>
-      {/* {props.error.error && props.error.error} */}
 
       <PlayersContainer gridArea='players' />
 

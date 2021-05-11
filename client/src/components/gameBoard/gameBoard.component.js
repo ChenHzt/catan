@@ -6,6 +6,7 @@ import {
   getGameData,
   buildSettelment,
   buildRoad,
+  buildCity,
   setCurrentAction,
   placeRobber
 } from "../../store/actions/gameActions";
@@ -19,8 +20,12 @@ import GameEdge from "../edge/edge.component";
 
 const GameBoard = (props) => {
   const onNodeClicked = (node) => {
-    if (props.currentAction === 'BUILD_SETTELMENT') {
+    if (props.currentAction === 'BUILD_SETTELMENT' ) {
       props.buildSettelment(props.game._id, node);
+      props.setCurrentAction(props.game._id,'NONE');
+    }
+    if(props.currentAction === 'BUILD_CITY'){
+      props.buildCity(props.game._id, node);
       props.setCurrentAction(props.game._id,'NONE');
     }
   };
@@ -160,5 +165,6 @@ export default connect(mapStateToProps, {
   buildSettelment,
   buildRoad,
   setCurrentAction,
-  placeRobber
+  placeRobber,
+  buildCity
 })(GameBoard);
