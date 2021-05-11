@@ -152,6 +152,18 @@ const validateLocationIsAvailable = (game, location) => {
 const validateRoadLocationIsAvailable = (game, location) => {
   if (game.board.edges[location].road !== null)
     throw new Error('this location is already ocupied');
+  const neighborVertices = game.board.edges[location].neighborVertices;
+  const isThereNearBuild = neighborVertices.some(ver => game.board.vertices[ver].build && game.board.vertices[ver].build.player===game.currentTurn);
+  if(isThereNearBuild) return;
+  const isThereNeighborRoads = game.board.edges.some(edge => {
+    const temp = edge.neighborVertices.some(ver => neighborVertices.includes(ver));
+    if(temp && edge.road && edge.road.player===game.currentTurn)
+      return true;
+    return false;
+  });
+
+  if(!isThereNeighborRoads)
+    throw new Error(`you cant build road without a path to your settelment`)
 };
 
 // eslint-disable-next-line prettier/prettier
