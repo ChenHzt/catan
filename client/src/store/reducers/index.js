@@ -18,6 +18,9 @@ export const gameDataReducer = (game = {}, action) => {
   if (action.type === "GET_BUILD_SETTELMENT_SUCCESS") {
     return action.data.game;
   }
+  if (action.type === "GET_BUILD_CITY_SUCCESS") {
+    return action.data.game;
+  }
   if (action.type === "GET_BUILD_ROAD_SUCCESS") {
     return action.data.game;
   }
