@@ -180,16 +180,58 @@ export const endTurn = (gameid) => async dispatch =>{
     .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
 }
 
-// export const rollDice = (gameId,diceValue) =>async dispatch =>{
-
-// }
 
 export const distributeResources = (gameId,diceValue) => async dispatch =>{
+
   userService
     .distributeResources(gameId,diceValue)
     .then((res) =>{
       try{
         dispatch({type:'DISTRIBUTE_RESOURCES',payload:res.data})
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+}
+
+export const rollDice = (gameId,diceValue) =>async dispatch =>{
+  if(diceValue === 7){
+    userService
+    .currentAction(gameId,'PLACE_ROBBER')
+    .then((res) => {
+      try{
+        dispatch({type:'SET_CURRENT_ACTION',payload:'PLACE_ROBBER'})
+      }
+      catch(e) {
+        console.log(res,e);
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+  }
+
+    userService
+    .distributeResources(gameId,diceValue)
+    .then((res) =>{
+      try{
+        dispatch({type:'DISTRIBUTE_RESOURCES',payload:res.data})
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+  
+}
+
+export const placeRobber = (gameId,hexId) => async dispatch =>{
+
+  userService
+    .placeRobber(gameId,hexId)
+    .then((res) =>{
+      try{
+        dispatch({type:'PLACE_ROBBER',payload:res.data})
       }
       catch(err) {
         console.log(err.message)

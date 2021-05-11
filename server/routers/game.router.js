@@ -28,4 +28,5 @@ router.get('/:gid/getValidPlacesForRoad',[auth,findGame],gameController.getValid
 router.get('/:gid/getValidPlacesForCity',[auth,findGame],gameController.getValidVerticesForPlayerToBuildCity);
 router.post('/:gid/currentAction',[auth,findGame],gameController.setCurrentAction);
 router.post('/:gid/endTurn',[auth,findGame],gameController.endTurn);
+router.post('/:gid/placeRobber',[auth,findGame],gameController.placeRobber);
 module.exports = router;

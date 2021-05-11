@@ -136,6 +136,7 @@ const GameSchema = new mongoose.Schema({
       "BUILD_ROAD",
       "BUILD_CITY",
       "BUY_DEVELOPMENT_CARD",
+      'PLACE_ROBBER'
     ],
   },
   dice:{

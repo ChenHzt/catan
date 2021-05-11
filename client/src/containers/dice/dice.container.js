@@ -4,7 +4,7 @@ import { playersColors } from "../../consts";
 import ReactDice from "react-dice-complete";
 import "react-dice-complete/dist/react-dice-complete.css";
 import React, { useRef } from "react";
-import { distributeResources } from "../../store/actions/gameActions";
+import { rollDice } from "../../store/actions/gameActions";
 import { StyledGameButton } from "../../style";
 
 class DiceContainer extends React.Component {
@@ -18,13 +18,15 @@ class DiceContainer extends React.Component {
   }
   componentDidUpdate() {
     if (this.state.dice1 !== 0 && this.state.dice2 !== 0) {
-      this.props.distributeResources(
+      this.props.rollDice(
         this.props.game._id,
         this.state.dice1 + this.state.dice2
       );
       this.setState({ dice1: 0, dice2: 0 });
     }
   }
+
+  
 
   rollDice() {
     this.reactDice1.rollAll();
@@ -77,4 +79,4 @@ const mapStateToProps = (state) => {
   return { game: state.game };
 };
 
-export default connect(mapStateToProps, { distributeResources })(DiceContainer);
+export default connect(mapStateToProps, { rollDice })(DiceContainer);

@@ -52,6 +52,10 @@ class UserService {
   distributeResources(gameId,dice) {
     return api.post(`/games/${gameId}/distributeResources`,{dice},{ headers: authHeader() })
   }
+
+  placeRobber(gameId,hexId){
+    return api.post(`/games/${gameId}/placeRobber`,{hexId},{ headers: authHeader() })
+  }
   
 }
 
