@@ -42,10 +42,10 @@ const VertixSchema = new mongoose.Schema({
       player: {
         type: Number,
       },
-      buildType:{
-        type:String,
-        enum:['settelment','city']
-      }
+      buildType: {
+        type: String,
+        enum: ["settelment", "city"],
+      },
     },
     default: null,
   },
@@ -122,17 +122,27 @@ const GameSchema = new mongoose.Schema({
     ref: "User",
     require: true,
   },
-  phase:{
-    type:String,
-    enum:['SETUP_ROUND_1','SETUP_ROUND_2','GAME','END'],
-    default:'SETUP_ROUND_1'
+  phase: {
+    type: String,
+    enum: ["SETUP_ROUND_1", "SETUP_ROUND_2", "GAME", "END"],
+    default: "SETUP_ROUND_1",
   },
-  actionActive:{
-    type:String,
-    default:'NONE',
-    enum:['NONE','BUILD_SETTELMENT','BUILD_ROAD','BUILD_CITY','BUY_DEVELOPMENT_CARD']
+  actionActive: {
+    type: String,
+    default: "NONE",
+    enum: [
+      "NONE",
+      "BUILD_SETTELMENT",
+      "BUILD_ROAD",
+      "BUILD_CITY",
+      "BUY_DEVELOPMENT_CARD",
+    ],
+  },
+  dice:{
+    type:Number,
+    default:0,
   }
-}); 
+});
 
 const Game = mongoose.model("Game", GameSchema);
 

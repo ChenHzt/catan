@@ -143,6 +143,8 @@ const resourceDistribution = async (req, res) => {
       gameUtils.getResourcesForPlayer(player, game, dice);
       player.save();
     });
+    game.dice=dice;
+    game.save();
     res.status(200).json({game});
   } catch (e) {
     return res.status(400).json({ error: e.message });
@@ -298,6 +300,7 @@ const endTurn = (req, res) => {
       if (game.currentTurn === 1) game.phase = "GAME";
       else game.currentTurn = game.currentTurn - 1;
     } else game.currentTurn = (game.currentTurn % game.players.length) + 1;
+    game.dice=0;
     game.save();
     res.status(200).send({ game });
   } catch (e) {

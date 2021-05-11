@@ -33,7 +33,13 @@ class DiceContainer extends React.Component {
   render() {
     return (
       <div style={{ gridArea: this.props.gridArea, padding: "20px" }}>
-        <div style={{ display: "flex", justifyContent:'space-around',padding:'0 20px'}}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            padding: "0 20px",
+          }}
+        >
           <ReactDice
             numDice={1}
             rollDone={(num) => this.setState({ dice1: num })}
@@ -57,9 +63,11 @@ class DiceContainer extends React.Component {
             rollTime={1}
           />
         </div>
-        <StyledGameButton onClick={() => this.rollDice()}>
-          roll
-        </StyledGameButton>
+        {this.props.game.dice ===0 && (
+          <StyledGameButton onClick={() => this.rollDice()}>
+            roll
+          </StyledGameButton>
+        )}
       </div>
     );
   }
