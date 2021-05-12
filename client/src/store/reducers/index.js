@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 // import {userGamesReducer} from './userReducers'
 import {errorReducer} from './errorReducer'
 import  {gameDimsReducer} from './gameDimsReducer'
-import  {gameDataReducer,validActionsReducer,currentActionReducer,currentTurnReducer,gamePhaseReducer} from './gameActionsReducers'
+import  {gameDataReducer,validActionsReducer,currentActionReducer,currentTurnReducer,gamePhaseReducer,diceReducer} from './gameActionsReducers'
 import * as actionTypes from '../actions/actionTypes'
 
 
@@ -21,6 +21,7 @@ export default combineReducers({
   gameDims: gameDimsReducer,
   validActions: validActionsReducer,
   currentTurn: currentTurnReducer,
+  dice: diceReducer,
   gamePhase: gamePhaseReducer,
   // locations: validPlacesForSettelmentsReducer,
   error:errorReducer,

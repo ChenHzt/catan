@@ -54,7 +54,7 @@ const buildSettelment = async (req, res) => {
 
     session.endSession();
 
-    return res.status(200).send({ game });
+    return res.status(200).send(game );
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -88,7 +88,7 @@ const buildCity = async (req, res) => {
 
     session.endSession();
 
-    return res.status(200).send({ game });
+    return res.status(200).send(game);
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -120,7 +120,7 @@ const buildRoad = async (req, res) => {
 
     session.endSession();
 
-    return res.status(200).send({ game });
+    return res.status(200).send(game);
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -130,9 +130,7 @@ const resourceDistribution = async (req, res) => {
   try {
     const { dice } = req.body;
     gameUtils.validations.validateDiceValueIsValid(dice);
-    // const game = await Game.findOne({ _id: req.params.gid }).populate(
-    //   "players"
-    // );
+
     const session = await mongoose.startSession();
     await session.withTransaction(async () => {
       const { players } = game;
@@ -145,7 +143,7 @@ const resourceDistribution = async (req, res) => {
     });
     session.endSession();
 
-    res.status(200).json({ game });
+    res.status(200).json(game);
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
@@ -285,7 +283,7 @@ const setCurrentAction = (req, res) => {
   try {
     game.actionActive = req.body.currentAction;
     game.save();
-    res.status(200).send({actionActive:game.actionActive});
+    res.status(200).send(game.actionActive);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -297,7 +295,7 @@ const endTurn = (req, res) => {
     if (game.players[game.currentTurn].victoryPoints === 10) {
       game.phase = gameConsts.phases.GAME_DONE_PHASE;
       game.save();
-      res.status(200).send({ game });
+      res.status(200).send({currentTurn:game.currentTurn,gamePhase:game.phase});
     }
     if (game.phase === gameConsts.phases.SETUP_ROUND_1_PHASE) {
       if (game.currentTurn === game.players.length)
@@ -309,7 +307,7 @@ const endTurn = (req, res) => {
     } else game.currentTurn = (game.currentTurn % game.players.length) + 1;
     game.dice = 0;
     game.save();
-    res.status(200).send({ phase:game.phase,currentTurn:game.currentTurn,dice:game.dice});
+    res.status(200).send({ gamePhase:game.phase,currentTurn:game.currentTurn,dice:game.dice});
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -322,7 +320,7 @@ const placeRobber = (req, res) => {
     prevRobber.robber = false;
     game.board.hexs[req.body.hexId].robber = true;
     game.save();
-    res.status(200).send({ hexs: game.board.hexs});
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -335,7 +333,7 @@ const buyDevelopmentCard = (req, res) => {
     player.developmentCards.knights += 1;
     game.save();
     player.save();
-    res.status(200).send({ game });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -352,7 +350,7 @@ const activateKnightCard = (req, res) => {
     player.activatedKnights += 1;
     game.save();
     player.save();
-    res.status(200).send({ game });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
