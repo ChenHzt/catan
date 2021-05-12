@@ -20,7 +20,7 @@ class AuthService {
   }
 
   async logout() {
-    await api.post('users/logout',{
+    await api.post('/users/logout',{
           headers:{
               Authentication:JSON.parse(localStorage.getItem("user")).token
           }
@@ -29,7 +29,7 @@ class AuthService {
   }
 
   async register(name,email, password) {
-    const response = await api.post("users", {
+    const response = await api.post("/users", {
       email,
       name,
       password
