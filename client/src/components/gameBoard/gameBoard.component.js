@@ -62,7 +62,7 @@ const GameBoard = (props) => {
           onClick={placeRobber}
           tile={tile}
           center={getTileCenterPointByLocation(JSON.parse(locationStr))}
-          size={props.tileRadius}
+          size={props.gameDims.tileRadius}
         ></Tile>
       );
     });
@@ -90,10 +90,10 @@ const GameBoard = (props) => {
                 build={props.game.board.vertices[ver].build}
                 onClick={onNodeClicked}
                 node={ver}
-                radius="12"
+                radius={props.gameDims.tileRadius/5}
                 center={calcTileNodesCenterPoint(
                   hex.location,
-                  props.tileRadius,
+                  props.gameDims.tileRadius,
                   i,
                   ver
                 )}
@@ -143,10 +143,10 @@ const GameBoard = (props) => {
   };
 
   return (
-    <svg width={"100%"} height={props.height} transform="scale(1)">
-      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.width - 662)/2} height={props.height} />
-      <Group width={props.width} height={props.width}>
-        <Group width={props.width} height={props.width}>
+    <svg width={"100%"} height={props.gameDims.height} transform="scale(1)">
+      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.gameDims.width - 662)/2} height={props.gameDims.height} />
+      <Group width={props.gameDims.width} height={props.gameDims.width}>
+        <Group width={props.gameDims.width} height={props.gameDims.width}>
           {generateBoard()}
           {generateNodes()}
           {generateEdges()}
@@ -162,6 +162,7 @@ const mapStateToProps = (state) => {
     locations: state.locations,
     error: state.error,
     currentAction: state.currentAction,
+    gameDims: state.gameDims,
   };
 };
 

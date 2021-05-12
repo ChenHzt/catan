@@ -47,7 +47,7 @@ const buildSettelment = async (req, res) => {
     player.victoryPoints += 1;
     const session = await mongoose.startSession();
 
-    await session.withTransaction(() => {
+    await session.withTransaction(async () => {
       game.save();
       player.save();
     });
@@ -82,8 +82,8 @@ const buildCity = async (req, res) => {
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
-      await game.save();
-      await player.save();
+       game.save();
+       player.save();
     });
 
     session.endSession();
@@ -128,6 +128,8 @@ const buildRoad = async (req, res) => {
 
 const resourceDistribution = async (req, res) => {
   try {
+    const { game } = req;
+
     const { dice } = req.body;
     gameUtils.validations.validateDiceValueIsValid(dice);
 
@@ -151,7 +153,7 @@ const resourceDistribution = async (req, res) => {
 
 const getValidActionForPlayer = async (req, res) => {
   const { game} = req;
-  const player = game.players[game.currentTurn - 1];
+  const player = game.players[game.currentTurn];
   const actions = [];
   try {
     switch (game.phase) {
@@ -264,7 +266,7 @@ const getValidVerticesForPlayerToBuildCity = (req, res) => {
           case "SETUP_ROUND_2":
           case "GAME":
             gameUtils.validations.validatePlayerHasSettelmentInLocation(
-              game.players[game.currentTurn - 1],
+              game.players[game.currentTurn],
               i
             );
             validVertices.push(i);
@@ -295,19 +297,19 @@ const endTurn = (req, res) => {
     if (game.players[game.currentTurn].victoryPoints === 10) {
       game.phase = gameConsts.phases.GAME_DONE_PHASE;
       game.save();
-      res.status(200).send({currentTurn:game.currentTurn,gamePhase:game.phase});
+      res.status(200).send({currentTurn:game.currentTurn,phase:game.phase});
     }
     if (game.phase === gameConsts.phases.SETUP_ROUND_1_PHASE) {
-      if (game.currentTurn === game.players.length)
-        game.phase = gameConsts.phases.SETUP_ROUND_2;
+      if (game.currentTurn === game.players.length-1)
+        game.phase = gameConsts.phases.SETUP_ROUND_2_PHASE;
       else game.currentTurn = game.currentTurn + 1;
-    } else if (game.phase === gameConsts.phases.SETUP_ROUND_2) {
-      if (game.currentTurn === 1) game.phase = gameConsts.phases.GAME_PHASE;
+    } else if (game.phase === gameConsts.phases.SETUP_ROUND_2_PHASE) {
+      if (game.currentTurn === 0) game.phase = gameConsts.phases.GAME_PHASE;
       else game.currentTurn = game.currentTurn - 1;
-    } else game.currentTurn = (game.currentTurn % game.players.length) + 1;
+    } else game.currentTurn = (game.currentTurn+1) % game.players.length;
     game.dice = 0;
     game.save();
-    res.status(200).send({ gamePhase:game.phase,currentTurn:game.currentTurn,dice:game.dice});
+    res.status(200).send({ phase:game.phase ,currentTurn:game.currentTurn ,dice:game.dice});
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -342,7 +344,7 @@ const buyDevelopmentCard = (req, res) => {
 const activateKnightCard = (req, res) => {
   const { game } = req;
   try {
-    const player = game.players[game.currentTurn - 1];
+    const player = game.players[game.currentTurn];
     player.developmentCards.knights -= 1;
     const prevRobber = game.board.hexs.find((hex) => hex.robber === true);
     prevRobber ? (prevRobber.robber = false) : null;

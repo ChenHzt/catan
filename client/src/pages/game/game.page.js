@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import GameBoard from "../../components/gameBoard/gameBoard.component";
 import {
   getGameData,
-  setGamesDimentions,
+  setBoardGameDims,
   getValidActions,
-  getPlacesForSettelment,
+  // getPlacesForSettelment,
   placeRobber,
 } from "../../store/actions/gameActions";
 import { useParams } from "react-router-dom";
@@ -24,7 +24,7 @@ function Game(props) {
   let id;
   
   id  = useParams().id;
-  if(!id) id=props.gameId;
+  // if(!id) id=props.gameId;
 
   useEffect(() => {
     const getData = async () => {
@@ -45,20 +45,17 @@ function Game(props) {
 
   useEffect(() => {
     if (gameContainer && gameContainer.current) {
-      props.setGamesDimentions(
+      props.setBoardGameDims(
         gameContainer.current.clientWidth,
         gameContainer.current.clientHeight
       );
-      gameContainer.current.onResize = (event) => {
-        console.log("resized", event);
-      };
+
     }
   }, [gameContainer.current]);
 
   useEffect(() => {
     props.getValidActions(id);
-  }, [props.game.currentTurn, props.currentAction,props.game.phase]);
-
+  }, [props.currentTurn, props.currentAction,props.phase]);
  
 
   return (
@@ -73,9 +70,9 @@ function Game(props) {
       >
         {Object.keys(props.game).length && (
           <GameBoard
-            height={props.gameDims.height}
-            width={props.gameDims.width}
-            tileRadius={props.gameDims.tileRadius}
+            // height={props.gameDims.height}
+            // width={props.gameDims.width}
+            // tileRadius={props.gameDims.tileRadius}
           />
         )}
       </div>
@@ -100,6 +97,8 @@ const mapStateToProps = (state) => {
     game: state.game,
     gameDims: state.gameDims,
     currentAction: state.currentAction,
+    currentTurn:state.currentTurn,
+    phase:state.phase,
     validActions: state.validActions,
     error: state.error,
   };
@@ -107,8 +106,8 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getGameData,
-  setGamesDimentions,
+  setBoardGameDims,
   getValidActions,
-  getPlacesForSettelment,
+  // getPlacesForSettelment,
   placeRobber
 })(Game);

@@ -16,7 +16,7 @@ const GameEdge = (props) => {
           height={8}
           strokeWidth={1}
           stroke={'#000000'}
-          fill={playersColors[build.player-1].primaryColor}
+          fill={playersColors[build.player].primaryColor}
           transform={`rotate(${slope},${center.x},${center.y})`}
 
         />

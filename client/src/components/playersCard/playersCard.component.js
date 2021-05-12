@@ -1,6 +1,7 @@
 const PlayerCard = (props) => {
   return (
     <svg
+      key={props.player._id}
       transform="scale(0.8) translate(-30,0)"
       width="307"
       height="104"

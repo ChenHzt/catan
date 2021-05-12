@@ -123,12 +123,13 @@ export const buildRoad = (gameid, location) => async (dispatch) => {
     userService
       .buildRoad(gameid, location)
       .then((res) => {
+        console.log(res);
         try {
-        if (res.status === 200) dispatch(success(actionTypes.GET_BUILD_ROAD_REQUEST,res.data));
+        if (res.status === 200) dispatch(success(actionTypes.GET_BUILD_ROAD_SUCCESS,res.data));
         }
         catch(e){ console.log(res,e)}
       })
-      .catch((err) => dispatch(error(actionTypes.GET_BUILD_ROAD_REQUEST,err.response.data.error)));
+      .catch((err) => dispatch(error(actionTypes.GET_BUILD_ROAD_ERROR,err.response.data.error)));
 
 };
 

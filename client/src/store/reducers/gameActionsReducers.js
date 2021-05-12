@@ -30,21 +30,29 @@ export const currentActionReducer = (currentActionType = "", action) => {
 };
 
 export const currentTurnReducer = (currentTurn = -1, action) => {
-  if (action.type === actionTypes.END_TURN_SUCCESS)
+  if (action.type === actionTypes.END_TURN_SUCCESS||
+    action.type ===  actionTypes.GET_GAME_DATA_SUCCESS ||
+    action.type ===  actionTypes.CREATE_NEW_GAME_SUCCESS)
     return action.data.currentTurn;
   else return currentTurn;
 };
 
 export const gamePhaseReducer = (phase = "", action) => {
-  if (action.type === actionTypes.END_TURN_SUCCESS)
-    return action.data.gamePhase;
+  if (action.type === actionTypes.END_TURN_SUCCESS ||
+    action.type ===  actionTypes.GET_GAME_DATA_SUCCESS ||
+    action.type ===  actionTypes.CREATE_NEW_GAME_SUCCESS){
+    console.log(action);
+    return action.data.phase;
+  }
   else return phase;
 };
 
 export const diceReducer = (dice = 0, action) => {
   if (
     action.type === actionTypes.END_TURN_SUCCESS ||
-    action.type === actionTypes.DISTRIBUTE_RESOURCES_SUCCESS
+    action.type === actionTypes.DISTRIBUTE_RESOURCES_SUCCESS||
+    action.type ===  actionTypes.GET_GAME_DATA_SUCCESS ||
+    action.type ===  actionTypes.CREATE_NEW_GAME_SUCCESS
   )
     return action.data.dice;
   else return dice;

@@ -60,6 +60,7 @@ export const calcTileCenterByLocationMap = (tileRadius,centerLine,topRowX) =>{
 
 
 export const getTileCenterPointByLocation = (tileLocation) => {
+  // if(tileCenterByLocationMap<19)
   const temp = tileCenterByLocationMap.get(JSON.stringify(tileLocation));
   return temp;
 };

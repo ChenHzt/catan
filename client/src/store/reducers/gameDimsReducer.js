@@ -11,6 +11,6 @@ import * as actionTypes from '../actions/actionTypes'
 
   export const gameDimsReducer = (dims = {}, action) => {
     if (action.type === actionTypes.SET_BOARD_GAME_DIMS) 
-        return action.payload;
+        return action.data;
     return dims;
   };
