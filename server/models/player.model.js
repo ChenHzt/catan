@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ItemSchema = new mongoose.Schema({
   location: {
@@ -12,9 +12,13 @@ const PlayerSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  turn:{
+    type:Number,
+    require:true
+  },
   color: {
     type: String,
-    enum: ['RED', 'YELLOW', 'BLUE', 'WHITE'],
+    enum: ["RED", "YELLOW", "BLUE", "WHITE"],
     require: true,
   },
   settelments: {
@@ -29,13 +33,13 @@ const PlayerSchema = new mongoose.Schema({
     available: [ItemSchema],
     built: [ItemSchema],
   },
-  activatedKnights:{
-    type:Number,
-    default:0
+  activatedKnights: {
+    type: Number,
+    default: 0,
   },
-  victoryPoints:{
-    type:Number,
-    default:0,
+  victoryPoints: {
+    type: Number,
+    default: 0,
   },
   resourceCards: {
     brick: {
@@ -83,7 +87,7 @@ const PlayerSchema = new mongoose.Schema({
   },
 });
 
-const Player = mongoose.model('Player', PlayerSchema);
+const Player = mongoose.model("Player", PlayerSchema);
 
 module.exports = {
   Player,

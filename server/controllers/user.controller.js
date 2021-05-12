@@ -41,9 +41,8 @@ const logout = async (req, res) => {
 
 const getUserLoggedIn = async (req, res) => {
   try {
-    const user = await User.findOne({_id:req.user._id})
-      .populate("games")
-      
+    const user = await User.findOne({ _id: req.user._id }).populate("games");
+
     res.status(200).send(user.games);
   } catch (e) {
     res.status(400).send();
