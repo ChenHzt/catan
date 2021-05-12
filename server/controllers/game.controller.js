@@ -49,6 +49,7 @@ const buildSettelment = async (req, res) => {
       gameUtils.payWithResources(player, gameConsts.payments.settelment);
 
     gameUtils.buildNewSettelment(player, game, req.body.location);
+    player.victoryPoints += 1;
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
@@ -82,6 +83,7 @@ const buildCity = async (req, res) => {
       gameUtils.payWithResources(player, gameConsts.payments.city);
 
     gameUtils.upgradeSettelmentToCity(player, game, req.body.location);
+    player.victoryPoints += 1;
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
@@ -161,7 +163,6 @@ const getValidActionForPlayer = async (req, res) => {
         if (player.settelments.built.length === 0)
           actions.push("BUILD_SETTELMENT");
         else if (player.roads.built.length === 0) actions.push("BUILD_ROAD");
-
         break;
       case "SETUP_ROUND_2":
         if (player.settelments.built.length === 1)
@@ -294,6 +295,12 @@ const setCurrentAction = (req, res) => {
 const endTurn = (req, res) => {
   const { game } = req;
   try {
+    if(game.players[game.currentTurn -1].victoryPoints === 10)
+    {
+      game.phase = 'END';
+      game.save();
+      res.status(200).send({ game });
+    }
     if (game.phase === "SETUP_ROUND_1") {
       if (game.currentTurn === game.players.length)
         game.phase = "SETUP_ROUND_2";
@@ -344,6 +351,7 @@ const activateKnightCard = (req, res) => {
     const prevRobber = game.board.hexs.find(hex => hex.robber===true);
     prevRobber ? prevRobber.robber=false : null;
     game.board.hexs[req.body.hexId].robber=true;
+    player.activatedKnights+=1;
     game.save();
     player.save();
     res.status(200).send({ game });

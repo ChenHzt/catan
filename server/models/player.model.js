@@ -29,6 +29,14 @@ const PlayerSchema = new mongoose.Schema({
     available: [ItemSchema],
     built: [ItemSchema],
   },
+  activatedKnights:{
+    type:Number,
+    default:0
+  },
+  victoryPoints:{
+    type:Number,
+    default:0,
+  },
   resourceCards: {
     brick: {
       type: Number,
