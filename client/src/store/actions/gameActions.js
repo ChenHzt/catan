@@ -224,7 +224,7 @@ export const placeRobber = (gameId,hexId) => async dispatch =>{
     .placeRobber(gameId,hexId)
     .then((res) =>{
       try{
-        dispatch(success(actionTypes.PLACE_ROBBER_SUCCESS))
+        dispatch(success(actionTypes.PLACE_ROBBER_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
@@ -257,7 +257,7 @@ export const activateKnight = (gameId,location) => async dispatch =>{
     .activateKnight(gameId,location)
     .then((res) =>{
       try{
-        dispatch(success(actionTypes.ACTIVATE_KNIGHT_CARD_SUCCESS))
+        dispatch(success(actionTypes.ACTIVATE_KNIGHT_CARD_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
