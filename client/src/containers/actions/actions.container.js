@@ -32,7 +32,6 @@ const PlayerActionsContainer = (props) => {
     <div
       style={{ display: "flex",padding:'20px', gridArea:props.gridArea,flexDirection: "column", alignItems: "center" }}
     >
-      <span>{props.error}</span>
       {actions.road && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_ROAD')}> new road</StyledGameButton>}
       {actions.settelment && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_SETTELMENT')}> new settelment</StyledGameButton>}
       {actions.city && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</StyledGameButton>}
