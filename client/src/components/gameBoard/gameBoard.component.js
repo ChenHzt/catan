@@ -9,7 +9,7 @@ import {
   buildCity,
   setCurrentAction,
   placeRobber,
-  activateKnight
+  activateKnight,
 } from "../../store/actions/gameActions";
 import GameNode from "../vertix/vertix.component";
 import {
@@ -21,32 +21,32 @@ import GameEdge from "../edge/edge.component";
 
 const GameBoard = (props) => {
   const onNodeClicked = (node) => {
-    if (props.currentAction === 'BUILD_SETTELMENT' ) {
+    if (props.currentAction === "BUILD_SETTELMENT") {
       props.buildSettelment(props.game._id, node);
-      props.setCurrentAction(props.game._id,'NONE');
+      props.setCurrentAction(props.game._id, "NONE");
     }
-    if(props.currentAction === 'BUILD_CITY'){
+    if (props.currentAction === "BUILD_CITY") {
       props.buildCity(props.game._id, node);
-      props.setCurrentAction(props.game._id,'NONE');
+      props.setCurrentAction(props.game._id, "NONE");
     }
   };
   const onEdgeClicked = (edge) => {
-    if (props.currentAction === 'BUILD_ROAD') {
+    if (props.currentAction === "BUILD_ROAD") {
       props.buildRoad(props.game._id, edge.edgeId);
-      props.setCurrentAction(props.game._id,'NONE');
+      props.setCurrentAction(props.game._id, "NONE");
     }
   };
 
-  const placeRobber = (tile) =>{
-    if(props.currentAction === 'PLACE_ROBBER'){
+  const placeRobber = (tile) => {
+    if (props.currentAction === "PLACE_ROBBER") {
       props.placeRobber(props.game._id, tile.hexId);
-      props.setCurrentAction(props.game._id,'NONE');      
+      props.setCurrentAction(props.game._id, "NONE");
     }
-    if(props.currentAction === 'ACTIVATE_KNIGHT'){
+    if (props.currentAction === "ACTIVATE_KNIGHT") {
       props.activateKnight(props.game._id, tile.hexId);
-      props.setCurrentAction(props.game._id,'NONE');      
+      props.setCurrentAction(props.game._id, "NONE");
     }
-  }
+  };
 
   const generateBoard = (tileRadius) => {
     const hexagonsArr = [];
@@ -90,7 +90,7 @@ const GameBoard = (props) => {
                 build={props.game.board.vertices[ver].build}
                 onClick={onNodeClicked}
                 node={ver}
-                radius={props.gameDims.tileRadius/5}
+                radius={props.gameDims.tileRadius / 5}
                 center={calcTileNodesCenterPoint(
                   hex.location,
                   props.gameDims.tileRadius,
@@ -144,7 +144,11 @@ const GameBoard = (props) => {
 
   return (
     <svg width={"100%"} height={props.gameDims.height} transform="scale(1)">
-      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.gameDims.width - 662)/2} height={props.gameDims.height} />
+      <image
+        xlinkHref={`/static/images/boardBackground.png`}
+        x={(props.gameDims.width-(props.gameDims.height*1.14))/2}
+        height={props.gameDims.height}
+      />
       <Group width={props.gameDims.width} height={props.gameDims.width}>
         <Group width={props.gameDims.width} height={props.gameDims.width}>
           {generateBoard()}
@@ -173,5 +177,5 @@ export default connect(mapStateToProps, {
   setCurrentAction,
   placeRobber,
   buildCity,
-  activateKnight
+  activateKnight,
 })(GameBoard);

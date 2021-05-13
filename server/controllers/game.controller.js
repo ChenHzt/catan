@@ -40,6 +40,9 @@ const buildSettelment = async (req, res) => {
     gameUtils.validations.validateLocationIsProvided(req.body);
     gameUtils.validations.validateLocationIsAvailable(game, req.body.location);
 
+    if (game.phase === gameConsts.phases.SETUP_ROUND_2_PHASE)
+      gameUtils.getResourcesSetupRound(game,player,req.body.location)
+    
     if (game.phase === gameConsts.phases.GAME_PHASE)
       gameUtils.payWithResources(player, gameConsts.payments.settelment);
 
@@ -54,7 +57,7 @@ const buildSettelment = async (req, res) => {
 
     session.endSession();
 
-    return res.status(200).send(game );
+    return res.status(200).send(game);
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -82,8 +85,8 @@ const buildCity = async (req, res) => {
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
-       game.save();
-       player.save();
+      game.save();
+      player.save();
     });
 
     session.endSession();
@@ -152,7 +155,7 @@ const resourceDistribution = async (req, res) => {
 };
 
 const getValidActionForPlayer = async (req, res) => {
-  const { game} = req;
+  const { game } = req;
   const player = game.players[game.currentTurn];
   const actions = [];
   try {
@@ -160,13 +163,15 @@ const getValidActionForPlayer = async (req, res) => {
       case gameConsts.phases.SETUP_ROUND_1_PHASE:
         if (player.settelments.built.length === 0)
           actions.push(gameConsts.actions.BUILD_SETTELMENT);
-        else if (player.roads.built.length === 0) actions.push(gameConsts.actions.BUILD_ROAD);
+        else if (player.roads.built.length === 0)
+          actions.push(gameConsts.actions.BUILD_ROAD);
         break;
 
       case gameConsts.phases.SETUP_ROUND_2_PHASE:
         if (player.settelments.built.length === 1)
           actions.push(gameConsts.actions.BUILD_SETTELMENT);
-        else if (player.roads.built.length === 1) actions.push(gameConsts.actions.BUILD_ROAD);
+        else if (player.roads.built.length === 1)
+          actions.push(gameConsts.actions.BUILD_ROAD);
         break;
 
       case gameConsts.phases.GAME_PHASE:
@@ -297,19 +302,25 @@ const endTurn = (req, res) => {
     if (game.players[game.currentTurn].victoryPoints === 10) {
       game.phase = gameConsts.phases.GAME_DONE_PHASE;
       game.save();
-      res.status(200).send({currentTurn:game.currentTurn,phase:game.phase});
+      res
+        .status(200)
+        .send({ currentTurn: game.currentTurn, phase: game.phase });
     }
     if (game.phase === gameConsts.phases.SETUP_ROUND_1_PHASE) {
-      if (game.currentTurn === game.players.length-1)
+      if (game.currentTurn === game.players.length - 1)
         game.phase = gameConsts.phases.SETUP_ROUND_2_PHASE;
       else game.currentTurn = game.currentTurn + 1;
     } else if (game.phase === gameConsts.phases.SETUP_ROUND_2_PHASE) {
       if (game.currentTurn === 0) game.phase = gameConsts.phases.GAME_PHASE;
       else game.currentTurn = game.currentTurn - 1;
-    } else game.currentTurn = (game.currentTurn+1) % game.players.length;
+    } else game.currentTurn = (game.currentTurn + 1) % game.players.length;
     game.dice = 0;
     game.save();
-    res.status(200).send({ phase:game.phase ,currentTurn:game.currentTurn ,dice:game.dice});
+    res.status(200).send({
+      phase: game.phase,
+      currentTurn: game.currentTurn,
+      dice: game.dice,
+    });
   } catch (e) {
     res.status(400).send(e.message);
   }

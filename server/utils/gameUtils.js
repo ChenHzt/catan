@@ -243,6 +243,16 @@ const buildRoad = (player, game, roadLocation) => {
   };
 };
 
+const getResourcesSetupRound = (game, player, location) => {
+  const newResources = { brick: 0, wood: 0, wheat: 0, sheep: 0, ore: 0 };
+  const { neighborHexs } = game.board.vertices[location];
+  neighborHexs
+    .forEach((neighbor) => (newResources[neighbor.resource] += 1));
+  for (const key in newResources) {
+    player.resourceCards[key] += newResources[key];
+  }
+};
+
 const payWithResources = (player, payment) => {
   const resources = Object.keys(payment);
   resources.forEach((element) => {
@@ -285,6 +295,7 @@ module.exports = {
   buildRoad,
   upgradeSettelmentToCity,
   payWithResources,
+  getResourcesSetupRound,
   // createMapFromHexToVertix,
   createMapFromVertixToHex,
   getResourcesForPlayer,
