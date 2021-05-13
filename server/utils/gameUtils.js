@@ -4,7 +4,7 @@
 const { Player } = require('../models/player.model');
 const { Game } = require('../models/game.model');
 const { edgesData, hexasData,mapVerticesNeighbors } = require('../consts/boardGraphConsts');
-const { tileCounts, tileDiceValues } = require('./gameConsts');
+const { tileCounts, tileDiceValues } = require('../consts/gameConsts');
 
 const initializeItems = (amount) => {
   const items = [];
@@ -31,6 +31,7 @@ const initializePlayer = (id, name) => {
       available: initializeItems(15),
       built: [],
     },
+    turn:id
   });
   try {
     player.save();
@@ -78,8 +79,7 @@ const initializeBoard = () => {
   }
 
   board.edges = edgesData.map((edge, index) => {
-    // board.vertices[edge[0]].neighborVertices.push(edge[1]);
-    // board.vertices[edge[1]].neighborVertices.push(edge[0]);
+
     return {
       edgeId: index,
       neighborVertices: [edge[0], edge[1]],
@@ -167,16 +167,16 @@ const validateRoadLocationIsAvailable = (game, location) => {
 };
 
 // eslint-disable-next-line prettier/prettier
-const validatePlayerIsAllowedToBuildRoadInLocation = (player,game,location) => {
-  const flag = false;
-  // eslint-disable-next-line prettier/prettier
-  const currentPlayerNeighborBuild = game.board.edges[location].neighborVertices
-  .filter((neighbor) =>
-    game.board.vertices[neighbor].build.player.equal(player._id)
-  );
-  // eslint-disable-next-line no-useless-return
-  if (currentPlayerNeighborBuild.length > 0) return;
-};
+// const validatePlayerIsAllowedToBuildRoadInLocation = (player,game,location) => {
+//   const flag = false;
+//   // eslint-disable-next-line prettier/prettier
+//   const currentPlayerNeighborBuild = game.board.edges[location].neighborVertices
+//   .filter((neighbor) =>
+//     game.board.vertices[neighbor].build.player.equal(player._id)
+//   );
+//   // eslint-disable-next-line no-useless-return
+//   if (currentPlayerNeighborBuild.length > 0) return;
+// };
 
 const validatePlayerHasSettelmentInLocation = (player, location) => {
   const settelmentToReplaceIndex = player.settelments.built.findIndex(
@@ -243,6 +243,16 @@ const buildRoad = (player, game, roadLocation) => {
   };
 };
 
+const getResourcesSetupRound = (game, player, location) => {
+  const newResources = { brick: 0, wood: 0, wheat: 0, sheep: 0, ore: 0 };
+  const { neighborHexs } = game.board.vertices[location];
+  neighborHexs
+    .forEach((neighbor) => (newResources[neighbor.resource] += 1));
+  for (const key in newResources) {
+    player.resourceCards[key] += newResources[key];
+  }
+};
+
 const payWithResources = (player, payment) => {
   const resources = Object.keys(payment);
   resources.forEach((element) => {
@@ -285,6 +295,7 @@ module.exports = {
   buildRoad,
   upgradeSettelmentToCity,
   payWithResources,
+  getResourcesSetupRound,
   // createMapFromHexToVertix,
   createMapFromVertixToHex,
   getResourcesForPlayer,

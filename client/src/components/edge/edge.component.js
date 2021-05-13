@@ -13,10 +13,10 @@ const GameEdge = (props) => {
           x={center.x - len / 2}
           y={center.y - 4}
           width={len}
-          height={8}
+          height={len/4}
           strokeWidth={1}
           stroke={'#000000'}
-          fill={playersColors[build.player-1].primaryColor}
+          fill={playersColors[build.player].primaryColor}
           transform={`rotate(${slope},${center.x},${center.y})`}
 
         />

@@ -1,11 +1,12 @@
 import { connect } from "react-redux";
 import {setCurrentAction,endTurn, buyDevelopmentCard} from '../../store/actions/gameActions'
 import { StyledGameButton } from "../../style";
-
+import React,{useState,useEffect} from 'react';
 const PlayerActionsContainer = (props) => {
   const actions = {};
   // props.game? console.log(props.game.dice !==0):null;
-  if (props.actions && props.actions.length >0 && props.game && (props.game.dice !==0 || props.game.phase !== 'GAME')) 
+
+  if (props.actions && props.actions.length >0 && props.game && (props.dice !==0 || props.phase !== 'GAME')) 
   props.actions.forEach((action) => {
     switch (action) {
       case "BUILD_SETTELMENT":
@@ -37,13 +38,13 @@ const PlayerActionsContainer = (props) => {
       {actions.city && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</StyledGameButton>}
       {actions.developmentCard && <StyledGameButton onClick={() => props.buyDevelopmentCard(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</StyledGameButton>}
       {actions.activateKnight && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'ACTIVATE_KNIGHT')}>use knight card</StyledGameButton>}
-      {props.game && (props.game.dice!==0 || (props.game.phase !=='GAME' && Object.keys(actions).length===0))  &&<StyledGameButton onClick={() => props.endTurn(props.gameId)}>end turn</StyledGameButton>}
+      {props.game && (props.dice!==0 || (props.phase !=='GAME' && Object.keys(actions).length===0))  &&<StyledGameButton onClick={() => props.endTurn(props.gameId)}>end turn</StyledGameButton>}
     </div>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {game:state.game, currentAction: state.currentAction,error:state.error.error};
+  return {game:state.game, currentAction: state.currentAction,dice:state.dice,phase:state.phase,error:state.error.error};
 };
 
 export default connect(mapStateToProps, { setCurrentAction, endTurn,buyDevelopmentCard })(

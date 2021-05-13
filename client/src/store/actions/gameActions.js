@@ -2,326 +2,266 @@ import api from "../../api/api";
 // import api from 'axios';
 import userService from "../../services/user.service";
 import { calcTileCenterByLocationMap } from "../../helper";
+import * as actionTypes from './actionTypes'
 
-export const setBoardGameDims = (dims) => {
-  // Return an action
+const request = (type) =>{
   return {
-    type: "BOARD_GAME_DIMS",
-    payload: dims,
-  };
-};
-
-export const createNewGame = (players) => async (dispatch) => {
-  console.log(players)
-  userService
-    .createNewGame(players)
-    .then((res) =>{
-      try{
-        dispatch({type:'CREATE_NEW_GAME',payload:{game:res.data}})
-      }
-      catch(err) {
-        console.log(err.message)
-      }
-    })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
-};
-
-export const getGameData = (gameid) => async (dispatch) => {
-  try {
-    const response = await userService.getGameData(gameid);
-    dispatch({ type: `GAME_DATA`, payload: response.data });
-  } catch (e) {
-    console.log(e.message);
-  }
-};
-
-export const setGamesDimentions = (width, height) => {
-  const tileRadius = height / 10;
-  const centerLine = width / 2;
-  const topRowX = height / 2 - 3 * tileRadius;
-  return {
-    type: "GAME_DIMENTIONS",
-    payload: { width, height, tileRadius, centerLine, topRowX },
-  };
-};
-
-export const startRoll = () => (dispatch) => {
-  dispatch({
-    type: SET_ROLLING,
-    payload: null,
-  });
-};
-
-export const getValidActions = (gameid) => async (dispatch) => {
-  try {
-    const response = await userService.getValidActionsForCurrentPlayer(gameid);
-    console.log(response.data);
-    dispatch({ type: `VALID_ACTIONS`, payload: response.data });
-  } catch (e) {
-    console.log(e.message);
-  }
-};
-
-export const getPlacesForSettelment = (gameid) => async (dispatch) => {
-  try {
-    const response = await userService.getValidPlacesToBuildSettelments(gameid);
-    dispatch({ type: `SETTELMENT_LOCATIONS`, payload: response.data });
-  } catch (e) {
-    console.log(e.message);
-  }
-};
-
-// todoTypes.js
-export const GET_BUILD_REQUEST = "GET_BUILD_SETTELMENT_REQUEST";
-export const GET_BUILD_SUCCESS = "GET_BUILD_SETTELMENT_SUCCESS";
-export const GET_BUILD_ERROR = "GET_BUILD_SETTELMENT_ERROR";
-
-// todoActions.js
-export function loadBuildRequest() {
-  return {
-    type: GET_BUILD_REQUEST,
+    type,
     error: ''
   };
 }
 
-export function loadBuildSuccess(results) {
+const success = (type,results) => {
   return {
-    type: GET_BUILD_SUCCESS,
+    type,
     data: results,
     error: '',
   };
 }
 
-export function loadBuildError(error) {
+const error = (type,error)  => {
   return {
-    type: GET_BUILD_ERROR,
+    type,
     data: null,
     error: error,
   };
 }
 
+export const createNewGame = (players) => async (dispatch) => {
+  console.log(players)
+  dispatch(request(actionTypes.CREATE_NEW_GAME_REQUEST))
+  userService
+    .createNewGame(players)
+    .then((res) =>{
+      try{
+        dispatch(success(actionTypes.CREATE_NEW_GAME_SUCCESS,res.data))
+      }
+      catch(err) {
+        console.log(err.message)
+      }
+    })
+    .catch((err) => dispatch(error(actionTypes.CREATE_NEW_GAME_ERROR,err.response.data.error)));
+};
+
+export const getGameData = (gameid) => async (dispatch) => {
+
+  dispatch(request(actionTypes.GET_GAME_DATA_REQUEST))
+
+  userService.getGameData(gameid).then((res) => {
+    try{
+      dispatch(success(actionTypes.GET_GAME_DATA_SUCCESS,res.data))
+    }
+    catch(err) {
+      console.log(err.message)
+    }
+  })
+  .catch((err) => dispatch(error(actionTypes.GET_GAME_DATA_ERROR, err.response.data.error)));
+
+};
+
+export const setBoardGameDims = (width, height) =>  (dispatch) =>  {
+  const tileRadius = height / 10;
+  const centerLine = width / 2;
+  const topRowX = height / 2 - 3 * tileRadius;
+
+  const dims={tileRadius,centerLine,topRowX,width,height}
+  dispatch(success(actionTypes.SET_BOARD_GAME_DIMS,dims))
+
+};
+
+export const getValidActions = (gameid) => async (dispatch) => {
+
+  dispatch(request(actionTypes.GET_VALID_ACTIONS_REQUEST))
+
+  userService.getValidActionsForCurrentPlayer(gameid).then((res) => {
+    try{
+      dispatch(success(actionTypes.GET_VALID_ACTIONS_SUCCESS,res.data))
+    }
+    catch(err) {
+      console.log(err.message)
+    }
+  })
+  .catch((err) => dispatch(error(actionTypes.GET_VALID_ACTIONS_ERROR, err.response.data.error)));
+
+};
+
 export const buildSettelment = (gameid, location) => async (dispatch) => {
  
-    dispatch(loadBuildRequest());
-    let response;
+    dispatch(request(actionTypes.GET_BUILD_SETTELMENT_REQUEST));
 
     userService
       .buildSettelment(gameid, location)
       .then((res) => {
         try {
-        if (res.status === 200) dispatch(loadBuildSuccess(res.data));
+        if (res.status === 200) dispatch(success( actionTypes.GET_BUILD_SETTELMENT_SUCCESS,res.data));
         }
         catch(e){ console.log(res,e)}
       })
-      .catch((err) => dispatch(loadBuildError(err.response.data.error)));
-
+      .catch((err) => dispatch(error( actionTypes.GET_BUILD_SETTELMENT_ERROR,err.response.data.error)));
 };
-// todoTypes.js
-export const GET_BUILD_CITY_REQUEST = "GET_BUILD_CITY_REQUEST";
-export const GET_BUILD_CITY_SUCCESS = "GET_BUILD_CITY_SUCCESS";
-export const GET_BUILD_CITY_ERROR = "GET_BUILD_CITY_ERROR";
-
-// todoActions.js
-export function loadBuildCityRequest() {
-  return {
-    type: GET_BUILD_REQUEST,
-    error: ''
-  };
-}
-
-export function loadBuildCitySuccess(results) {
-  return {
-    type: GET_BUILD_SUCCESS,
-    data: results,
-    error: '',
-  };
-}
-
-export function loadBuildCityError(error) {
-  return {
-    type: GET_BUILD_ERROR,
-    data: null,
-    error: error,
-  };
-}
 
 export const buildCity = (gameid, location) => async (dispatch) => {
  
-    dispatch(loadBuildCityRequest());
-    let response;
+    dispatch(request(actionTypes.GET_BUILD_CITY_REQUEST));
 
     userService
       .buildCity(gameid, location)
       .then((res) => {
         try {
-        if (res.status === 200) dispatch(loadBuildCitySuccess(res.data));
+        if (res.status === 200) dispatch(success(actionTypes.GET_BUILD_CITY_SUCCESS,res.data));
         }
         catch(e){ console.log(res,e)}
       })
-      .catch((err) => dispatch(loadBuildCityError(err.response.data.error)));
+      .catch((err) => dispatch(error(actionTypes.GET_BUILD_CITY_ERROR,err.response.data.error)));
 
 };
 
-// todoTypes.js
-export const GET_BUILD_ROAD_REQUEST = "GET_BUILD_ROAD_REQUEST";
-export const GET_BUILD_ROAD_SUCCESS = "GET_BUILD_ROAD_SUCCESS";
-export const GET_BUILD_ROAD_ERROR = "GET_BUILD_ROAD_ERROR";
-
-// todoActions.js
-export function loadBuildRoadRequest() {
-  return {
-    type: GET_BUILD_ROAD_REQUEST,
-    error: ''
-  };
-}
-
-export function loadBuildRoadSuccess(results) {
-  return {
-    type: GET_BUILD_ROAD_SUCCESS,
-    data: results,
-    error: '',
-  };
-}
-
-export function loadBuildRoadError(error) {
-  return {
-    type: GET_BUILD_ROAD_ERROR,
-    data: null,
-    error: error,
-  };
-}
-
 export const buildRoad = (gameid, location) => async (dispatch) => {
  
-    dispatch(loadBuildRoadRequest());
+    dispatch(request(actionTypes.GET_BUILD_ROAD_REQUEST));
 
     userService
       .buildRoad(gameid, location)
       .then((res) => {
+        console.log(res);
         try {
-        if (res.status === 200) dispatch(loadBuildRoadSuccess(res.data));
+        if (res.status === 200) dispatch(success(actionTypes.GET_BUILD_ROAD_SUCCESS,res.data));
         }
         catch(e){ console.log(res,e)}
       })
-      .catch((err) => dispatch(loadBuildRoadError(err.response.data.error)));
+      .catch((err) => dispatch(error(actionTypes.GET_BUILD_ROAD_ERROR,err.response.data.error)));
 
 };
 
 export const setCurrentAction = (gameid,actionType) => async dispatch =>{
+  dispatch(request(actionTypes.SET_CURRENT_ACTION_REQUEST))
     userService
     .currentAction(gameid,actionType)
     .then((res) => {
       try{
-        dispatch({type:'SET_CURRENT_ACTION',payload:actionType})
+        dispatch(success(actionTypes.SET_CURRENT_ACTION_SUCCESS,actionType))
       }
       catch(e) {
         console.log(res,e);
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.SET_CURRENT_ACTION_ERROR, err.response.data.error)));
+
 
 
 }
+
 export const endTurn = (gameid) => async dispatch =>{
+    dispatch(request(actionTypes.END_TURN_REQUEST))
+  
     userService
     .endTurn(gameid)
     .then((res) => {
       try{
-        dispatch({type:'END_TURN',payload:res.data})
+        dispatch(success(actionTypes.END_TURN_SUCCESS,res.data))
       }
       catch(e) {
         console.log(res,e);
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.END_TURN_ERROR, err.response.data.error)));
 }
 
-
 export const distributeResources = (gameId,diceValue) => async dispatch =>{
+  dispatch(request(actionTypes.DISTRIBUTE_RESOURCES_REQUEST))
 
   userService
     .distributeResources(gameId,diceValue)
     .then((res) =>{
       try{
-        dispatch({type:'DISTRIBUTE_RESOURCES',payload:res.data})
+        dispatch(success(actionTypes.DISTRIBUTE_RESOURCES_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.DISTRIBUTE_RESOURCES_ERROR,err.response.data.error)));
+
 }
 
 export const rollDice = (gameId,diceValue) =>async dispatch =>{
   if(diceValue === 7){
+  dispatch(request(actionTypes.SET_CURRENT_ACTION_REQUEST))
+    
     userService
     .currentAction(gameId,'PLACE_ROBBER')
     .then((res) => {
       try{
-        dispatch({type:'SET_CURRENT_ACTION',payload:'PLACE_ROBBER'})
+        dispatch(success(actionTypes.SET_CURRENT_ACTION_SUCCESS,actionType))
       }
       catch(e) {
         console.log(res,e);
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.SET_CURRENT_ACTION_ERROR,err.response.data.error)));
   }
+  dispatch(request(actionTypes.DISTRIBUTE_RESOURCES_REQUEST))
 
     userService
     .distributeResources(gameId,diceValue)
     .then((res) =>{
       try{
-        dispatch({type:'DISTRIBUTE_RESOURCES',payload:res.data})
+        dispatch(success(actionTypes.DISTRIBUTE_RESOURCES_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.DISTRIBUTE_RESOURCES_ERROR,err.response.data.error)));
+
   
 }
 
 export const placeRobber = (gameId,hexId) => async dispatch =>{
+  dispatch(request(actionTypes.PLACE_ROBBER_REQUEST))
 
   userService
     .placeRobber(gameId,hexId)
     .then((res) =>{
       try{
-        dispatch({type:'PLACE_ROBBER',payload:res.data})
+        dispatch(success(actionTypes.PLACE_ROBBER_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.PLACE_ROBBER_ERROR,err.response.data.error)));
+
 }
 
 export const buyDevelopmentCard = (gameId) => async dispatch =>{
+  dispatch(request(actionTypes.BUY_DEVELOPMENT_CARD_REQUEST))
 
   userService
     .buyDevelopmentCard(gameId)
     .then((res) =>{
       try{
-        dispatch({type:'BUY_DEVELOPMENT_CARD',payload:res.data})
+        dispatch(success(actionTypes.BUY_DEVELOPMENT_CARD_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.BUY_DEVELOPMENT_CARD_ERROR, err.response.data.error)));
+
 }
 
 export const activateKnight = (gameId,location) => async dispatch =>{
-
+  dispatch(request(actionTypes.ACTIVATE_KNIGHT_CARD_REQUEST))
   userService
     .activateKnight(gameId,location)
     .then((res) =>{
       try{
-        dispatch({type:'ACTIVATE_KNIGHT',payload:res.data})
+        dispatch(success(actionTypes.ACTIVATE_KNIGHT_CARD_SUCCESS,res.data))
       }
       catch(err) {
         console.log(err.message)
       }
     })
-    .catch((err) => dispatch({type:'ERROR', error:err.response.data.error}));
+    .catch((err) => dispatch(error(actionTypes.ACTIVATE_KNIGHT_CARD_ERROR, err.response.data.error)));
 }

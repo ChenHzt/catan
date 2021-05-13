@@ -9,7 +9,7 @@ const GameNode = (props) => {
     if (build && (build.type === "settelment" || build.type === "city"))
       return (
         <image
-        xlinkHref={`/static/images/pices/${build.type}/${playersColors[build.player-1].name}.svg`}
+        xlinkHref={`/static/images/pices/${build.type}/${playersColors[build.player].name}.svg`}
          height={radius*2}
          width={radius*2}
         x="0"
@@ -23,6 +23,7 @@ const GameNode = (props) => {
 
   return (
     <svg
+      key={node}
       onClick={() => currentAction==='BUILD_SETTELMENT' || currentAction==='BUILD_CITY'  ? onClick(node) : null}
       width={2 * radius}
       height={2 * radius}

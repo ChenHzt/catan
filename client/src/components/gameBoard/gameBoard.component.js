@@ -9,7 +9,7 @@ import {
   buildCity,
   setCurrentAction,
   placeRobber,
-  activateKnight
+  activateKnight,
 } from "../../store/actions/gameActions";
 import GameNode from "../vertix/vertix.component";
 import {
@@ -18,38 +18,51 @@ import {
   nodesCenterByIdMap,
 } from "../../helper";
 import GameEdge from "../edge/edge.component";
-
+import {
+  calcTileCenterByLocationMap,
+} from "../../helper";
 const GameBoard = (props) => {
-  const onNodeClicked = (node) => {
-    if (props.currentAction === 'BUILD_SETTELMENT' ) {
-      props.buildSettelment(props.game._id, node);
-      props.setCurrentAction(props.game._id,'NONE');
+  useEffect(() => {
+    if (props.gameDims.tileRadius) {
+      calcTileCenterByLocationMap(
+        props.gameDims.tileRadius,
+        props.gameDims.centerLine,
+        props.gameDims.topRowX
+      );
     }
-    if(props.currentAction === 'BUILD_CITY'){
+  }, [props.gameDims]);
+
+  const onNodeClicked = (node) => {
+    if (props.currentAction === "BUILD_SETTELMENT") {
+      props.buildSettelment(props.game._id, node);
+      props.setCurrentAction(props.game._id, "NONE");
+    }
+    if (props.currentAction === "BUILD_CITY") {
       props.buildCity(props.game._id, node);
-      props.setCurrentAction(props.game._id,'NONE');
+      props.setCurrentAction(props.game._id, "NONE");
     }
   };
   const onEdgeClicked = (edge) => {
-    if (props.currentAction === 'BUILD_ROAD') {
+    if (props.currentAction === "BUILD_ROAD") {
       props.buildRoad(props.game._id, edge.edgeId);
-      props.setCurrentAction(props.game._id,'NONE');
+      props.setCurrentAction(props.game._id, "NONE");
     }
   };
 
-  const placeRobber = (tile) =>{
-    if(props.currentAction === 'PLACE_ROBBER'){
+  const placeRobber = (tile) => {
+    if (props.currentAction === "PLACE_ROBBER") {
       props.placeRobber(props.game._id, tile.hexId);
-      props.setCurrentAction(props.game._id,'NONE');      
+      props.setCurrentAction(props.game._id, "NONE");
     }
-    if(props.currentAction === 'ACTIVATE_KNIGHT'){
+    if (props.currentAction === "ACTIVATE_KNIGHT") {
       props.activateKnight(props.game._id, tile.hexId);
-      props.setCurrentAction(props.game._id,'NONE');      
+      props.setCurrentAction(props.game._id, "NONE");
     }
-  }
+  };
 
   const generateBoard = (tileRadius) => {
     const hexagonsArr = [];
+    console.log(props);
     const temp = props.game.board.hexs.map((hex) => [
       JSON.stringify(hex.location),
       hex,
@@ -62,13 +75,14 @@ const GameBoard = (props) => {
           onClick={placeRobber}
           tile={tile}
           center={getTileCenterPointByLocation(JSON.parse(locationStr))}
-          size={props.tileRadius}
+          size={props.gameDims.tileRadius}
         ></Tile>
       );
     });
 
     return hexagonsArr;
   };
+
 
   const generateNodes = () => {
     const arr = [];
@@ -90,10 +104,10 @@ const GameBoard = (props) => {
                 build={props.game.board.vertices[ver].build}
                 onClick={onNodeClicked}
                 node={ver}
-                radius="12"
+                radius={props.gameDims.tileRadius / 5}
                 center={calcTileNodesCenterPoint(
                   hex.location,
-                  props.tileRadius,
+                  props.gameDims.tileRadius,
                   i,
                   ver
                 )}
@@ -143,10 +157,14 @@ const GameBoard = (props) => {
   };
 
   return (
-    <svg width={"100%"} height={props.height} transform="scale(1)">
-      <image xlinkHref={`/static/images/boardBackground.png`} x={(props.width - 662)/2} height={props.height} />
-      <Group width={props.width} height={props.width}>
-        <Group width={props.width} height={props.width}>
+    <svg width={"100%"} height={props.gameDims.height} transform="scale(1)">
+      <image
+        xlinkHref={`/static/images/boardBackground.png`}
+        x={(props.gameDims.width-(props.gameDims.height*1.14))/2}
+        height={props.gameDims.height}
+      />
+      <Group width={props.gameDims.width} height={props.gameDims.width}>
+        <Group width={props.gameDims.width} height={props.gameDims.width}>
           {generateBoard()}
           {generateNodes()}
           {generateEdges()}
@@ -162,6 +180,7 @@ const mapStateToProps = (state) => {
     locations: state.locations,
     error: state.error,
     currentAction: state.currentAction,
+    gameDims: state.gameDims,
   };
 };
 
@@ -172,5 +191,5 @@ export default connect(mapStateToProps, {
   setCurrentAction,
   placeRobber,
   buildCity,
-  activateKnight
+  activateKnight,
 })(GameBoard);

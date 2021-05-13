@@ -29,6 +29,7 @@ const HexSchema = new mongoose.Schema({
   robber: {
     type: Boolean,
     default: false,
+    index: true,
   },
 });
 
@@ -48,6 +49,7 @@ const VertixSchema = new mongoose.Schema({
       },
     },
     default: null,
+    sparse: true,
   },
   neighborVertices: [
     {
@@ -69,6 +71,7 @@ const EdgeSchema = new mongoose.Schema({
       },
     },
     default: null,
+    sparse: true,
   },
   neighborVertices: [
     {
@@ -98,9 +101,9 @@ const GameSchema = new mongoose.Schema({
   },
   currentTurn: {
     type: Number,
-    default: 1,
+    default: 0,
     validate(value) {
-      if (value > this.playersNum)
+      if (value >= this.playersNum)
         throw new Error(
           `current turn can't be ${value} because there are only ${this.playersNum} players`
         );
@@ -121,6 +124,7 @@ const GameSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     require: true,
+    index:true
   },
   phase: {
     type: String,
@@ -136,12 +140,20 @@ const GameSchema = new mongoose.Schema({
       "BUILD_ROAD",
       "BUILD_CITY",
       "BUY_DEVELOPMENT_CARD",
-      'PLACE_ROBBER'
+      "PLACE_ROBBER",
     ],
   },
-  dice:{
-    type:Number,
-    default:0,
+  dice: {
+    type: Number,
+    default: 0,
+  },
+  creationDate:{
+    type:Date,
+    default: Date.now
+  },
+  diceRolledInCurrentTurn:{
+    type:Boolean,
+    default: false
   }
 });
 

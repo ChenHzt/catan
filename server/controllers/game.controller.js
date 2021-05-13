@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const { Game } = require("../models/game.model");
 const gameUtils = require("../utils/gameUtils");
-const gameConsts = require("../utils/gameConsts");
+const gameConsts = require("../consts/gameConsts");
 
 const getGameData = async (req, res) => {
   res.status(200).json(req.game);
@@ -17,8 +17,6 @@ const createNewGame = async (req, res) => {
     }
     const game = new Game({
       playersNum: playersData.length,
-      currentTurn: 1,
-      isActive: true,
       players: players.map((p) => p._id),
       board: gameUtils.initializeBoard(),
       creator: req.user._id,
@@ -27,7 +25,9 @@ const createNewGame = async (req, res) => {
     // gameUtils.createMapFromHexToVertix(game.board);
     gameUtils.createMapFromVertixToHex(game.board);
     await game.save();
-    res.status(200).send(game);
+    const filter = { _id: game._id, creator:req.user._id };
+    const gameObj = await Game.findOne(filter).populate('players');
+    res.status(200).send(gameObj);
   } catch (e) {
     return res.status(400).send(e.message);
   }
@@ -36,16 +36,16 @@ const createNewGame = async (req, res) => {
 const buildSettelment = async (req, res) => {
   try {
     const { game } = req;
-    // const playerId = req.params.pid;
-
-    // const player = await gameUtils.getPlayerData(playerId);
-    const player = game.players[game.currentTurn - 1];
+    const player = game.players[game.currentTurn];
 
     gameUtils.validations.validatePlayerHasAvailableSettelment(player);
     gameUtils.validations.validateLocationIsProvided(req.body);
     gameUtils.validations.validateLocationIsAvailable(game, req.body.location);
 
-    if (game.phase === "GAME")
+    if (game.phase === gameConsts.phases.SETUP_ROUND_2_PHASE)
+      gameUtils.getResourcesSetupRound(game,player,req.body.location)
+    
+    if (game.phase === gameConsts.phases.GAME_PHASE)
       gameUtils.payWithResources(player, gameConsts.payments.settelment);
 
     gameUtils.buildNewSettelment(player, game, req.body.location);
@@ -53,13 +53,13 @@ const buildSettelment = async (req, res) => {
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
-      await game.save();
-      await player.save();
+      game.save();
+      player.save();
     });
 
     session.endSession();
 
-    return res.status(200).send({ game, player });
+    return res.status(200).send(game);
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -69,7 +69,7 @@ const buildCity = async (req, res) => {
   try {
     const { game } = req;
 
-    const player = game.players[game.currentTurn - 1];
+    const player = game.players[game.currentTurn];
 
     gameUtils.validations.validatePlayerHasAvailableCities(player);
 
@@ -79,7 +79,7 @@ const buildCity = async (req, res) => {
       player,
       req.body.location
     );
-    if (game.phase === "GAME")
+    if (game.phase === gameConsts.phases.GAME_PHASE)
       gameUtils.payWithResources(player, gameConsts.payments.city);
 
     gameUtils.upgradeSettelmentToCity(player, game, req.body.location);
@@ -87,13 +87,13 @@ const buildCity = async (req, res) => {
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
-      await game.save();
-      await player.save();
+      game.save();
+      player.save();
     });
 
     session.endSession();
 
-    return res.status(200).send({ game, player });
+    return res.status(200).send(game);
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -102,9 +102,8 @@ const buildCity = async (req, res) => {
 const buildRoad = async (req, res) => {
   try {
     const { game } = req;
-    // const playerId = req.params.pid;
 
-    const player = game.players[game.currentTurn - 1];
+    const player = game.players[game.currentTurn];
 
     gameUtils.validations.validatePlayerHasAvailableRoads(player);
     gameUtils.validations.validateRoadLocationIsProvided(req.body);
@@ -113,20 +112,20 @@ const buildRoad = async (req, res) => {
       req.body.location
     );
 
-    if (game.phase === "GAME")
+    if (game.phase === gameConsts.phases.GAME_PHASE)
       gameUtils.payWithResources(player, gameConsts.payments.road);
     gameUtils.buildRoad(player, game, req.body.location);
 
     const session = await mongoose.startSession();
 
     await session.withTransaction(async () => {
-      await game.save();
-      await player.save();
+      game.save();
+      player.save();
     });
 
     session.endSession();
 
-    return res.status(200).send({ game, player });
+    return res.status(200).send(game);
   } catch (e) {
     return res.status(400).send({ error: e.message });
   }
@@ -134,49 +133,57 @@ const buildRoad = async (req, res) => {
 
 const resourceDistribution = async (req, res) => {
   try {
+    const { game } = req;
+
     const { dice } = req.body;
     gameUtils.validations.validateDiceValueIsValid(dice);
-    const game = await Game.findOne({ _id: req.params.gid }).populate(
-      "players"
-    );
 
-    const { players } = game;
-    players.forEach((player) => {
-      gameUtils.getResourcesForPlayer(player, game, dice);
-      player.save();
+    const session = await mongoose.startSession();
+    await session.withTransaction(async () => {
+      const { players } = game;
+      players.forEach((player) => {
+        gameUtils.getResourcesForPlayer(player, game, dice);
+        player.save();
+      });
+      game.dice = dice;
+      game.diceRolledInCurrentTurn = true;
+      game.save();
     });
-    game.dice=dice;
-    game.save();
-    res.status(200).json({game});
+    session.endSession();
+
+    res.status(200).json(game);
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
 };
 
 const getValidActionForPlayer = async (req, res) => {
-  const { game, user } = req;
-  const player = game.players[game.currentTurn - 1];
+  const { game } = req;
+  const player = game.players[game.currentTurn];
   const actions = [];
   try {
     switch (game.phase) {
-      case "SETUP_ROUND_1":
+      case gameConsts.phases.SETUP_ROUND_1_PHASE:
         if (player.settelments.built.length === 0)
-          actions.push("BUILD_SETTELMENT");
-        else if (player.roads.built.length === 0) actions.push("BUILD_ROAD");
+          actions.push(gameConsts.actions.BUILD_SETTELMENT);
+        else if (player.roads.built.length === 0)
+          actions.push(gameConsts.actions.BUILD_ROAD);
         break;
-      case "SETUP_ROUND_2":
-        if (player.settelments.built.length === 1)
-          actions.push("BUILD_SETTELMENT");
-        else if (player.roads.built.length === 1) actions.push("BUILD_ROAD");
 
+      case gameConsts.phases.SETUP_ROUND_2_PHASE:
+        if (player.settelments.built.length === 1)
+          actions.push(gameConsts.actions.BUILD_SETTELMENT);
+        else if (player.roads.built.length === 1)
+          actions.push(gameConsts.actions.BUILD_ROAD);
         break;
-      case "GAME":
+
+      case gameConsts.phases.GAME_PHASE:
         if (
           player.resourceCards.wood >= 1 &&
           player.resourceCards.brick >= 1 &&
           player.roads.available.length > 0
         )
-          actions.push("BUILD_ROAD");
+          actions.push(gameConsts.actions.BUILD_ROAD);
         if (
           player.resourceCards.wood >= 1 &&
           player.resourceCards.brick >= 1 &&
@@ -184,22 +191,22 @@ const getValidActionForPlayer = async (req, res) => {
           player.resourceCards.sheep >= 1 &&
           player.settelments.available.length > 0
         )
-          actions.push("BUILD_SETTELMENT");
+          actions.push(gameConsts.actions.BUILD_SETTELMENT);
         if (
           player.resourceCards.ore >= 3 &&
           player.resourceCards.wheat >= 2 &&
           player.settelments.built.length > 0 &&
           player.cities.available.length > 0
         )
-          actions.push("BUILD_CITY");
+          actions.push(gameConsts.actions.BUILD_CITY);
         if (
           player.resourceCards.ore >= 1 &&
           player.resourceCards.wheat >= 1 &&
           player.resourceCards.sheep >= 1
         )
-          actions.push("BUY_DEVELOPMENT_CARD");
-        if(player.developmentCards.knights > 0)
-          actions.push('ACTIVATE_KNIGHT')
+          actions.push(gameConsts.actions.BUY_DEVELOPMENT_CARD);
+        if (player.developmentCards.knights > 0)
+          actions.push(gameConsts.actions.ACTIVATE_KNIGHT);
     }
     res.status(200).send(actions);
   } catch (e) {
@@ -267,7 +274,7 @@ const getValidVerticesForPlayerToBuildCity = (req, res) => {
           case "SETUP_ROUND_2":
           case "GAME":
             gameUtils.validations.validatePlayerHasSettelmentInLocation(
-              game.players[game.currentTurn - 1],
+              game.players[game.currentTurn],
               i
             );
             validVertices.push(i);
@@ -286,7 +293,7 @@ const setCurrentAction = (req, res) => {
   try {
     game.actionActive = req.body.currentAction;
     game.save();
-    res.status(200).send(game);
+    res.status(200).send(game.actionActive);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -295,23 +302,25 @@ const setCurrentAction = (req, res) => {
 const endTurn = (req, res) => {
   const { game } = req;
   try {
-    if(game.players[game.currentTurn -1].victoryPoints === 10)
-    {
-      game.phase = 'END';
+    if (game.players[game.currentTurn].victoryPoints === 10) {
+      game.phase = gameConsts.phases.GAME_DONE_PHASE;
       game.save();
-      res.status(200).send({ game });
+      res
+        .status(200)
+        .send({ currentTurn: game.currentTurn, phase: game.phase });
     }
-    if (game.phase === "SETUP_ROUND_1") {
-      if (game.currentTurn === game.players.length)
-        game.phase = "SETUP_ROUND_2";
+    if (game.phase === gameConsts.phases.SETUP_ROUND_1_PHASE) {
+      if (game.currentTurn === game.players.length - 1)
+        game.phase = gameConsts.phases.SETUP_ROUND_2_PHASE;
       else game.currentTurn = game.currentTurn + 1;
-    } else if (game.phase === "SETUP_ROUND_2") {
-      if (game.currentTurn === 1) game.phase = "GAME";
+    } else if (game.phase === gameConsts.phases.SETUP_ROUND_2_PHASE) {
+      if (game.currentTurn === 0) game.phase = gameConsts.phases.GAME_PHASE;
       else game.currentTurn = game.currentTurn - 1;
-    } else game.currentTurn = (game.currentTurn % game.players.length) + 1;
-    game.dice=0;
+    } else game.currentTurn = (game.currentTurn + 1) % game.players.length;
+    game.dice = 0;
+    game.diceRolledInCurrentTurn = false;
     game.save();
-    res.status(200).send({ game });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -320,11 +329,13 @@ const endTurn = (req, res) => {
 const placeRobber = (req, res) => {
   const { game } = req;
   try {
-    const prevRobber = game.board.hexs.find(hex => hex.robber===true);
-    prevRobber.robber=false;
-    game.board.hexs[req.body.hexId].robber=true
+    const prevRobber = game.board.hexs.find((hex) => hex.robber === true);
+    prevRobber.robber = false;
+    game.board.hexs[req.body.hexId].robber = true;
+    game.diceRolledInCurrentTurn = true;
+    game.dice=7;
     game.save();
-    res.status(200).send({ game });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -333,11 +344,13 @@ const placeRobber = (req, res) => {
 const buyDevelopmentCard = (req, res) => {
   const { game } = req;
   try {
-    const player = game.players[game.currentTurn -1] 
+    const player = game.players[game.currentTurn];
+    if (game.phase === gameConsts.phases.GAME_PHASE)
+      gameUtils.payWithResources(player, gameConsts.payments.developmentCard);
     player.developmentCards.knights += 1;
     game.save();
     player.save();
-    res.status(200).send({ game });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -346,15 +359,15 @@ const buyDevelopmentCard = (req, res) => {
 const activateKnightCard = (req, res) => {
   const { game } = req;
   try {
-    const player = game.players[game.currentTurn -1];
+    const player = game.players[game.currentTurn];
     player.developmentCards.knights -= 1;
-    const prevRobber = game.board.hexs.find(hex => hex.robber===true);
-    prevRobber ? prevRobber.robber=false : null;
-    game.board.hexs[req.body.hexId].robber=true;
-    player.activatedKnights+=1;
+    const prevRobber = game.board.hexs.find((hex) => hex.robber === true);
+    prevRobber ? (prevRobber.robber = false) : null;
+    game.board.hexs[req.body.hexId].robber = true;
+    player.activatedKnights += 1;
     game.save();
     player.save();
-    res.status(200).send({ game });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -375,5 +388,5 @@ module.exports = {
   endTurn,
   placeRobber,
   buyDevelopmentCard,
-  activateKnightCard
+  activateKnightCard,
 };

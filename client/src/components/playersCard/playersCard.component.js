@@ -1,6 +1,7 @@
 const PlayerCard = (props) => {
   return (
     <svg
+      key={props.player._id}
       transform="scale(0.8) translate(-30,0)"
       width="307"
       height="104"
@@ -153,7 +154,7 @@ const PlayerCard = (props) => {
           fontSize="15"
           transform="translate(382.297 310)"
         >
-          1
+          {props.player.victoryPoints}
           <tspan font-size="15" x="-26.7424" y="0">
             2
           </tspan>

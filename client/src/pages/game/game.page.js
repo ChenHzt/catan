@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import GameBoard from "../../components/gameBoard/gameBoard.component";
 import {
   getGameData,
-  setGamesDimentions,
+  setBoardGameDims,
   getValidActions,
-  getPlacesForSettelment,
+  // getPlacesForSettelment,
   placeRobber,
 } from "../../store/actions/gameActions";
 import { useParams } from "react-router-dom";
@@ -21,10 +21,11 @@ import ResourcesContainer from "../../containers/resources/resources.container";
 
 function Game(props) {
   const gameContainer = useRef(null);
+
   let id;
-  
-  id  = useParams().id;
-  if(!id) id=props.gameId;
+
+  id = useParams().id;
+  if (!id) id = props.gameId;
 
   useEffect(() => {
     const getData = async () => {
@@ -32,6 +33,15 @@ function Game(props) {
     };
     getData();
   }, []);
+
+  useEffect(() => {
+    if (gameContainer && gameContainer.current) {
+      props.setBoardGameDims(
+        gameContainer.current.clientWidth,
+        gameContainer.current.clientHeight
+      );
+    }
+  }, [gameContainer.current]);
 
   useEffect(() => {
     if (props.gameDims.tileRadius) {
@@ -44,54 +54,51 @@ function Game(props) {
   }, [props.gameDims]);
 
   useEffect(() => {
-    if (gameContainer && gameContainer.current) {
-      props.setGamesDimentions(
-        gameContainer.current.clientWidth,
-        gameContainer.current.clientHeight
-      );
-      gameContainer.current.onResize = (event) => {
-        console.log("resized", event);
-      };
-    }
-  }, [gameContainer.current]);
+    // if(props.currentAction === 'NONE' && props.phase==='GAME')
+    props.getValidActions(id);
+  }, [props.currentTurn, props.phase]);
 
   useEffect(() => {
-    props.getValidActions(id);
-  }, [props.game.currentTurn, props.currentAction,props.game.phase]);
+    if (props.currentAction === "NONE") props.getValidActions(id);
+  }, [props.currentAction]);
 
- 
+  const renderGame = () => {
+    return (
+      <StyledGridContainer>
+        <div
+          ref={gameContainer}
+          style={{
+            gridArea: "gameBoard",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {Object.keys(props.game).length && (
+            <GameBoard
+            // height={props.gameDims.height}
+            // width={props.gameDims.width}
+            // tileRadius={props.gameDims.tileRadius}
+            />
+          )}
+        </div>
 
-  return (
-    <StyledGridContainer>
-      <div
-        ref={gameContainer}
-        style={{
-          gridArea: "gameBoard",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {Object.keys(props.game).length && (
-          <GameBoard
-            height={props.gameDims.height}
-            width={props.gameDims.width}
-            tileRadius={props.gameDims.tileRadius}
-          />
-        )}
-      </div>
-
-      <PlayersContainer gridArea='players' />
+        <PlayersContainer gridArea="players" />
 
         <PlayerActionsContainer
-          gridArea='actions'
+          gridArea="actions"
           gameId={id}
           actions={props.validActions}
         />
-        <DiceContainer gridArea='dice' />
-        <ResourcesContainer gridArea='resources' />
+        <DiceContainer gridArea="dice" />
+        <ResourcesContainer gridArea="resources" />
+      </StyledGridContainer>
+    );
+  };
 
-    </StyledGridContainer>
-  );
+  const renderPreview = () => {
+    return <GameBoard />;
+  };
+  return <>{!props.preview ? renderGame() : renderPreview()}</>;
 }
 
 const mapStateToProps = (state) => {
@@ -100,6 +107,8 @@ const mapStateToProps = (state) => {
     game: state.game,
     gameDims: state.gameDims,
     currentAction: state.currentAction,
+    currentTurn: state.currentTurn,
+    phase: state.phase,
     validActions: state.validActions,
     error: state.error,
   };
@@ -107,8 +116,8 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getGameData,
-  setGamesDimentions,
+  setBoardGameDims,
   getValidActions,
-  getPlacesForSettelment,
-  placeRobber
+  // getPlacesForSettelment,
+  placeRobber,
 })(Game);
