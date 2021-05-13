@@ -37,19 +37,13 @@ function UserPage(props) {
   }, [props.game]);
 
   return (
-    // <div>
-    //     <ul>
-    //         {props.games.map((game) => <a href={`/game/${game._id}`}><GamePreviewCard gameDims={gameDims(250,200)} game={game}></GamePreviewCard></a>)}
-    //     </ul>
-    //     <NewGameForm submit={props.createNewGame}/>
-    // </div>
     <StyledBackground>
       <StyledFormContainer className="flexContainer flexContainer--col">
         <StyledLogo/>
         <NewGameForm submit={props.createNewGame} />
-        
       </StyledFormContainer>
-      <ul style={{display:'flex',flexWrap:'wrap', overflowY:'scroll'}}>
+      
+      <ul style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around', overflowY:'scroll'}}>
           {props.games.map((game) => (
               <GamePreviewCard
                 gameDims={gameDims(250, 200)}

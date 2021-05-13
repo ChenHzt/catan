@@ -12,9 +12,10 @@ import {
   nodesCenterByIdMap,
 } from "../../helper";
 import GameEdge from "../edge/edge.component";
+import { useHistory } from "react-router-dom";
 
 export const GamePreviewCard = (props) => {
-  console.log(props);
+  const history = useHistory();
 
   const generateBoardPreview = () => {
     const hexagonsArr = [];
@@ -127,7 +128,7 @@ export const GamePreviewCard = (props) => {
             </Group>
           </Group>
         </svg>
-        <StyledButton>CONTINUE GAME</StyledButton>
+        <StyledButton onClick={() => history.push(`/game/${props.game._id}`)}>CONTINUE GAME</StyledButton>
     </StyledCard>
   );
 };
