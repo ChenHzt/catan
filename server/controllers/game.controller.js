@@ -25,7 +25,9 @@ const createNewGame = async (req, res) => {
     // gameUtils.createMapFromHexToVertix(game.board);
     gameUtils.createMapFromVertixToHex(game.board);
     await game.save();
-    res.status(200).send(game);
+    const filter = { _id: game._id, creator:req.user._id };
+    const gameObj = await Game.findOne(filter).populate('players');
+    res.status(200).send(gameObj);
   } catch (e) {
     return res.status(400).send(e.message);
   }

@@ -21,11 +21,11 @@ import ResourcesContainer from "../../containers/resources/resources.container";
 
 function Game(props) {
   const gameContainer = useRef(null);
-  
+
   let id;
-  
-  id  = useParams().id;
-  // if(!id) id=props.gameId;
+
+  id = useParams().id;
+  if (!id) id = props.gameId;
 
   useEffect(() => {
     const getData = async () => {
@@ -33,6 +33,15 @@ function Game(props) {
     };
     getData();
   }, []);
+
+  useEffect(() => {
+    if (gameContainer && gameContainer.current) {
+      props.setBoardGameDims(
+        gameContainer.current.clientWidth,
+        gameContainer.current.clientHeight
+      );
+    }
+  }, [gameContainer.current]);
 
   useEffect(() => {
     if (props.gameDims.tileRadius) {
@@ -45,57 +54,51 @@ function Game(props) {
   }, [props.gameDims]);
 
   useEffect(() => {
-    if (gameContainer && gameContainer.current) {
-      props.setBoardGameDims(
-        gameContainer.current.clientWidth,
-        gameContainer.current.clientHeight
-      );
-
-    }
-  }, [gameContainer.current]);
-
-  useEffect(() => {
     // if(props.currentAction === 'NONE' && props.phase==='GAME')
-      props.getValidActions(id);
-  }, [props.currentTurn,props.phase]);
- 
-  useEffect(() => {
-    if(props.currentAction === 'NONE')
-      props.getValidActions(id);
-  }, [props.currentAction]);
- 
+    props.getValidActions(id);
+  }, [props.currentTurn, props.phase]);
 
-  return (
-    <StyledGridContainer >
-      <div
-        ref={gameContainer}
-        style={{
-          gridArea: "gameBoard",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {Object.keys(props.game).length && (
-          <GameBoard
+  useEffect(() => {
+    if (props.currentAction === "NONE") props.getValidActions(id);
+  }, [props.currentAction]);
+
+  const renderGame = () => {
+    return (
+      <StyledGridContainer>
+        <div
+          ref={gameContainer}
+          style={{
+            gridArea: "gameBoard",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {Object.keys(props.game).length && (
+            <GameBoard
             // height={props.gameDims.height}
             // width={props.gameDims.width}
             // tileRadius={props.gameDims.tileRadius}
-          />
-        )}
-      </div>
+            />
+          )}
+        </div>
 
-      <PlayersContainer gridArea='players' />
+        <PlayersContainer gridArea="players" />
 
         <PlayerActionsContainer
-          gridArea='actions'
+          gridArea="actions"
           gameId={id}
           actions={props.validActions}
         />
-        <DiceContainer gridArea='dice' />
-        <ResourcesContainer gridArea='resources' />
+        <DiceContainer gridArea="dice" />
+        <ResourcesContainer gridArea="resources" />
+      </StyledGridContainer>
+    );
+  };
 
-    </StyledGridContainer>
-  );
+  const renderPreview = () => {
+    return <GameBoard />;
+  };
+  return <>{!props.preview ? renderGame() : renderPreview()}</>;
 }
 
 const mapStateToProps = (state) => {
@@ -104,8 +107,8 @@ const mapStateToProps = (state) => {
     game: state.game,
     gameDims: state.gameDims,
     currentAction: state.currentAction,
-    currentTurn:state.currentTurn,
-    phase:state.phase,
+    currentTurn: state.currentTurn,
+    phase: state.phase,
     validActions: state.validActions,
     error: state.error,
   };
@@ -116,5 +119,5 @@ export default connect(mapStateToProps, {
   setBoardGameDims,
   getValidActions,
   // getPlacesForSettelment,
-  placeRobber
+  placeRobber,
 })(Game);

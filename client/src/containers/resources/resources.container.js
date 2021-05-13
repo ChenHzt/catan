@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import React,{useEffect,useState} from 'react';
 import {StyledResourcesContainer,StyledResource} from './style'
 const ResourcesContainer = (props) =>{
-    console.log(Object.keys(props.game));
+    console.log((props.game));
     if(!props.game || Object.keys(props.game).length === 0) return <></>
     const playerResources = props.game.players[props.currentTurn].resourceCards;
 

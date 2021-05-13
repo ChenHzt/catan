@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyledGameButton } from "../../style";
+import { StyledButton,StyledInput} from "../../style";
 
 export const NewGameForm = (props) => {
   const [playersNum, setPlayersNum] = useState(4);
@@ -23,7 +23,7 @@ export const NewGameForm = (props) => {
     for (let i = 0; i < playersNum; i++) {
       arr.push(
         <li style={{margin:'10px'}}>
-          <input
+          <StyledInput
             value={playersNames[i]}
             onChange={(event) => editField(event, i)}
             type="text"
@@ -40,7 +40,7 @@ export const NewGameForm = (props) => {
   }
 
   return (
-    <div>
+    <div style={{color:'white'}}>
       <div>
         <label for="playersNum">Amount of Players:</label>
         <select
@@ -54,7 +54,7 @@ export const NewGameForm = (props) => {
         </select>
       </div>
       <ol style={{padding:'10px'}}>{renderForm()}</ol>
-      <StyledGameButton onClick={submit}>Create Game</StyledGameButton>
+      <StyledButton onClick={submit}>Create Game</StyledButton>
     </div>
   );
 };

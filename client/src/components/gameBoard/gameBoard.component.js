@@ -18,8 +18,20 @@ import {
   nodesCenterByIdMap,
 } from "../../helper";
 import GameEdge from "../edge/edge.component";
-
+import {
+  calcTileCenterByLocationMap,
+} from "../../helper";
 const GameBoard = (props) => {
+  useEffect(() => {
+    if (props.gameDims.tileRadius) {
+      calcTileCenterByLocationMap(
+        props.gameDims.tileRadius,
+        props.gameDims.centerLine,
+        props.gameDims.topRowX
+      );
+    }
+  }, [props.gameDims]);
+
   const onNodeClicked = (node) => {
     if (props.currentAction === "BUILD_SETTELMENT") {
       props.buildSettelment(props.game._id, node);
@@ -50,6 +62,7 @@ const GameBoard = (props) => {
 
   const generateBoard = (tileRadius) => {
     const hexagonsArr = [];
+    console.log(props);
     const temp = props.game.board.hexs.map((hex) => [
       JSON.stringify(hex.location),
       hex,
@@ -69,6 +82,7 @@ const GameBoard = (props) => {
 
     return hexagonsArr;
   };
+
 
   const generateNodes = () => {
     const arr = [];
