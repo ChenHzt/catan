@@ -154,6 +154,18 @@ const GameSchema = new mongoose.Schema({
   diceRolledInCurrentTurn:{
     type:Boolean,
     default: false
+  },
+  largestArmy:{
+    owner:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Player",
+      default:null
+    },
+    knightsNum:{
+      type: Number,
+      default:0,
+
+    }
   }
 });
 

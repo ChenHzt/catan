@@ -42,8 +42,8 @@ function UserPage(props) {
         <StyledLogo/>
         <NewGameForm submit={props.createNewGame} />
       </StyledFormContainer>
-      
-      <ul style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around', overflowY:'scroll'}}>
+
+      <ul style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around', overflowY:'auto'}}>
           {props.games.map((game) => (
               <GamePreviewCard
                 gameDims={gameDims(250, 200)}

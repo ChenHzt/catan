@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { Game } = require("../models/game.model");
 const gameUtils = require("../utils/gameUtils");
 const gameConsts = require("../consts/gameConsts");
+const { Player } = require("../models/player.model");
 
 const getGameData = async (req, res) => {
   res.status(200).json(req.game);
@@ -302,7 +303,7 @@ const setCurrentAction = (req, res) => {
 const endTurn = (req, res) => {
   const { game } = req;
   try {
-    if (game.players[game.currentTurn].victoryPoints === 10) {
+    if (game.players[game.currentTurn].victoryPoints  >= 10) {
       game.phase = gameConsts.phases.GAME_DONE_PHASE;
       game.save();
       res
@@ -365,6 +366,14 @@ const activateKnightCard = (req, res) => {
     prevRobber ? (prevRobber.robber = false) : null;
     game.board.hexs[req.body.hexId].robber = true;
     player.activatedKnights += 1;
+    if(player.activatedKnights >=3 && player.activatedKnights > game.largestArmy.knightsNum){
+      const prevOwnerLargestArmy = Player.findById(game.largestArmy.owner);
+      prevOwnerLargestArmy.victoryPoints -= 2;
+      prevOwnerLargestArmy.save();
+      game.largestArmy.owner = player._id;
+      player.victoryPoints += 2
+      game.largestArmy.knightsNum = player.activatedKnights;
+    }
     game.save();
     player.save();
     res.status(200).send(game);
