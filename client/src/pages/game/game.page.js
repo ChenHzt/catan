@@ -21,6 +21,7 @@ import ResourcesContainer from "../../containers/resources/resources.container";
 
 function Game(props) {
   const gameContainer = useRef(null);
+  
   let id;
   
   id  = useParams().id;
@@ -65,7 +66,7 @@ function Game(props) {
  
 
   return (
-    <StyledGridContainer>
+    <StyledGridContainer >
       <div
         ref={gameContainer}
         style={{
