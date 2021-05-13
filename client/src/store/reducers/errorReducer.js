@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 
 const initState = {
     error: null,
@@ -7,6 +8,8 @@ const initState = {
     const { error } = action;
   
     if (error || error==='') {
+      if(error.length>0)
+        toast.error(error);
       return {
         error: error,
       };

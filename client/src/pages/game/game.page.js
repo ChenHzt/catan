@@ -18,7 +18,8 @@ import PlayersContainer from "../../containers/players/players.container";
 import PlayerActionsContainer from "../../containers/actions/actions.container";
 import DiceContainer from "../../containers/dice/dice.container";
 import ResourcesContainer from "../../containers/resources/resources.container";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Game(props) {
   const gameContainer = useRef(null);
 
@@ -74,11 +75,7 @@ function Game(props) {
           }}
         >
           {Object.keys(props.game).length && (
-            <GameBoard
-            // height={props.gameDims.height}
-            // width={props.gameDims.width}
-            // tileRadius={props.gameDims.tileRadius}
-            />
+            <GameBoard/>
           )}
         </div>
 
@@ -98,7 +95,22 @@ function Game(props) {
   const renderPreview = () => {
     return <GameBoard />;
   };
-  return <>{!props.preview ? renderGame() : renderPreview()}</>;
+  return (
+    <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      {!props.preview ? renderGame() : renderPreview()}
+    </>
+  );
 }
 
 const mapStateToProps = (state) => {
