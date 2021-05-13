@@ -144,6 +144,7 @@ const resourceDistribution = async (req, res) => {
         player.save();
       });
       game.dice = dice;
+      game.diceRolledInCurrentTurn = true;
       game.save();
     });
     session.endSession();
@@ -315,12 +316,9 @@ const endTurn = (req, res) => {
       else game.currentTurn = game.currentTurn - 1;
     } else game.currentTurn = (game.currentTurn + 1) % game.players.length;
     game.dice = 0;
+    game.diceRolledInCurrentTurn = false;
     game.save();
-    res.status(200).send({
-      phase: game.phase,
-      currentTurn: game.currentTurn,
-      dice: game.dice,
-    });
+    res.status(200).send(game);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -332,6 +330,8 @@ const placeRobber = (req, res) => {
     const prevRobber = game.board.hexs.find((hex) => hex.robber === true);
     prevRobber.robber = false;
     game.board.hexs[req.body.hexId].robber = true;
+    game.diceRolledInCurrentTurn = true;
+    game.dice=7;
     game.save();
     res.status(200).send(game);
   } catch (e) {
@@ -343,6 +343,8 @@ const buyDevelopmentCard = (req, res) => {
   const { game } = req;
   try {
     const player = game.players[game.currentTurn];
+    if (game.phase === gameConsts.phases.GAME_PHASE)
+      gameUtils.payWithResources(player, gameConsts.payments.developmentCard);
     player.developmentCards.knights += 1;
     game.save();
     player.save();

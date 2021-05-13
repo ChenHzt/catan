@@ -54,8 +54,14 @@ function Game(props) {
   }, [gameContainer.current]);
 
   useEffect(() => {
-    props.getValidActions(id);
-  }, [props.currentTurn, props.currentAction,props.phase]);
+    // if(props.currentAction === 'NONE' && props.phase==='GAME')
+      props.getValidActions(id);
+  }, [props.currentTurn,props.phase]);
+ 
+  useEffect(() => {
+    if(props.currentAction === 'NONE')
+      props.getValidActions(id);
+  }, [props.currentAction]);
  
 
   return (

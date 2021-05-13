@@ -150,6 +150,10 @@ const GameSchema = new mongoose.Schema({
   creationDate:{
     type:Date,
     default: Date.now
+  },
+  diceRolledInCurrentTurn:{
+    type:Boolean,
+    default: false
   }
 });
 

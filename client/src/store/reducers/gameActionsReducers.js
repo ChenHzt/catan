@@ -10,6 +10,7 @@ export const gameDataReducer = (game = {}, action) => {
     case actionTypes.DISTRIBUTE_RESOURCES_SUCCESS:
     case actionTypes.PLACE_ROBBER_SUCCESS:
     case actionTypes.ACTIVATE_KNIGHT_CARD_SUCCESS:
+    case actionTypes.END_TURN_SUCCESS:
     case actionTypes.BUY_DEVELOPMENT_CARD_SUCCESS:
       return action.data;
     default:

@@ -68,7 +68,7 @@ class DiceContainer extends React.Component {
             rollTime={1}
           />
         </div>
-        {this.props.phase==='GAME' && this.props.dice ===0 && (
+        {this.props.phase==='GAME' && this.props.dice ===0 && !this.props.isRolled && (
           <StyledGameButton onClick={() => this.rollDice()}>
             roll
           </StyledGameButton>
@@ -79,7 +79,7 @@ class DiceContainer extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { game: state.game, phase:state.phase, dice:state.dice};
+  return { game: state.game, phase:state.phase, dice:state.dice,isRolled:state.game.diceRolledInCurrentTurn};
 };
 
 export default connect(mapStateToProps, { rollDice })(DiceContainer);

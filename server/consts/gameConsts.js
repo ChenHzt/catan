@@ -23,6 +23,7 @@ const payments = {
   settelment: { brick: 1, sheep: 1, wood: 1, wheat: 1 },
   city: { wheat: 2, ore: 3 },
   road: { brick: 1, wood: 1 },
+  developmentCard: { wheat:1,sheep:1,ore:1 },
 };
 
 //game phases

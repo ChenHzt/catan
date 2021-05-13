@@ -1,10 +1,11 @@
 import { connect } from "react-redux";
 import {setCurrentAction,endTurn, buyDevelopmentCard} from '../../store/actions/gameActions'
 import { StyledGameButton } from "../../style";
-
+import React,{useState,useEffect} from 'react';
 const PlayerActionsContainer = (props) => {
   const actions = {};
   // props.game? console.log(props.game.dice !==0):null;
+
   if (props.actions && props.actions.length >0 && props.game && (props.dice !==0 || props.phase !== 'GAME')) 
   props.actions.forEach((action) => {
     switch (action) {
