@@ -17,14 +17,7 @@ tileCounts[WOOD] = 4;
 
 // eslint-disable-next-line prettier/prettier
 const tileDiceValues = [5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11];
-const tileSpiralOrder = [0,1,2,11,12,13,3,10,17,8,14,4,9,16,15,5,8,7,6]
-// const tileSpiralOrderMap = tileSpiralOrder.reduce((map, currentValue,index) => {
-//   map[index] =currentValue;
-//   return map;
-// }, {});
-// const temp = tileSpiralOrder.map(val => )
 
-console.log
 
 const payments = {
   settelment: { brick: 1, sheep: 1, wood: 1, wheat: 1 },
@@ -51,7 +44,6 @@ module.exports = {
   payments,
   tileCounts,
   tileDiceValues,
-  tileSpiralOrderMap,
   phases:{
     GAME_PHASE,
     SETUP_ROUND_1_PHASE,
