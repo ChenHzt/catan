@@ -58,8 +58,8 @@ const generateRandomBoard = () => {
   shuffleArray(boardTiles);
   let index = 0;
   const temp1 = boardTiles.map((elem) => {
-    if (elem === 'desert') return { number: 0, resource: elem };
-    return { number: tileDiceValues[index++], resource: elem };
+    if (elem === 'desert') return { number: 0, resource: elem, robber:true};
+    return { number: tileDiceValues[index++], resource: elem,robber:false};
   });
   return temp1;
 };
@@ -92,6 +92,7 @@ const initializeBoard = () => {
     vertices: h.vertices,
     resource: randomBoardTiles[i].resource,
     diceNumber: randomBoardTiles[i].number,
+    robber: randomBoardTiles[i].robber
   }));
 
   return board;

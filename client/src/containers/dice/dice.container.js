@@ -66,6 +66,7 @@ class DiceContainer extends React.Component {
             dieSize={50}
             disableIndividual={true}
             rollTime={1}
+            
           />
         </div>
         {this.props.phase==='GAME' && this.props.dice ===0 && !this.props.isRolled && (

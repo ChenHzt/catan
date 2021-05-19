@@ -1,4 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
+import { toast } from 'react-toastify';
 
 export const gameDataReducer = (game = {}, action) => {
   switch (action.type) {
@@ -25,8 +26,14 @@ export const validActionsReducer = (actions = [], action) => {
 };
 
 export const currentActionReducer = (currentActionType = "", action) => {
-  if (action.type === actionTypes.SET_CURRENT_ACTION_SUCCESS)
+  if (action.type === actionTypes.SET_CURRENT_ACTION_SUCCESS){
+    action.data!== 'NONE'?  toast.info(action.data):null;
     return action.data;
+  }
+  if(action.type === actionTypes.END_TURN_SUCCESS){
+    console.log('pleaseeee return nonee');
+    return 'NONE'
+  }
   else return currentActionType;
 };
 

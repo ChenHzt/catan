@@ -192,7 +192,7 @@ export const rollDice = (gameId,diceValue) =>async dispatch =>{
     .currentAction(gameId,'PLACE_ROBBER')
     .then((res) => {
       try{
-        dispatch(success(actionTypes.SET_CURRENT_ACTION_SUCCESS,actionType))
+        dispatch(success(actionTypes.SET_CURRENT_ACTION_SUCCESS,'PLACE_ROBBER'))
       }
       catch(e) {
         console.log(res,e);
