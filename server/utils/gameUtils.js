@@ -147,15 +147,18 @@ const validateLocationIsAvailable = (game, location) => {
         `cant build a settelment in a distance of less then 2 roads from other settelment or city`
       );
   });
-  const isThereNeighborRoads = game.board.edges.some(edge => {
-    const temp = edge.neighborVertices.includes(location);
-    if(temp && edge.road && edge.road.player===game.currentTurn)
-      return true;
-    return false;
-  });
-
-  if(!isThereNeighborRoads)
-    throw new Error(`you don't have a path to this location`);
+  if(game.phase === 'GAME'){
+    const isThereNeighborRoads = game.board.edges.some(edge => {
+      const temp = edge.neighborVertices.includes(location);
+      if(temp && edge.road && edge.road.player===game.currentTurn)
+        return true;
+      return false;
+    });
+  
+    if(!isThereNeighborRoads)
+      throw new Error(`you don't have a path to this location`);
+  }
+  
 };
 
 const validateRoadLocationIsAvailable = (game, location) => {

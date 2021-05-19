@@ -20,6 +20,7 @@ import DiceContainer from "../../containers/dice/dice.container";
 import ResourcesContainer from "../../containers/resources/resources.container";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 function Game(props) {
   const gameContainer = useRef(null);
 
@@ -62,6 +63,17 @@ function Game(props) {
   useEffect(() => {
     if (props.currentAction === "NONE") props.getValidActions(id);
   }, [props.currentAction]);
+
+  // const renderModal = () =>{
+  //   <Modal
+  //         isOpen={props.game.currentAction===}
+  //         onAfterOpen={afterOpenModal}
+  //         onRequestClose={closeModal}
+  //         style={customStyles}
+  //         contentLabel="Example Modal"
+  //       >
+  //     </Modal>
+  // }
 
   const renderGame = () => {
     return (
