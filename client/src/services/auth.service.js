@@ -1,6 +1,7 @@
 // import axios from "axios";
 import api from '../api/api'
-// import api from '../api/api'
+import authHeader from '../services/auth-header';
+
 
 class AuthService {
   async login(email, password) {
@@ -20,11 +21,8 @@ class AuthService {
   }
 
   async logout() {
-    await api.post('/users/logout',{
-          headers:{
-              Authentication:JSON.parse(localStorage.getItem("user")).token
-          }
-      })
+    await api.post('/users/logout',{},{ headers: authHeader() })
+    
     localStorage.removeItem("user");
   }
 

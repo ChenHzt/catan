@@ -36,8 +36,18 @@ function UserPage(props) {
       history.push(`/game/${props.game._id}`);
   }, [props.game]);
 
+  const handleLogout = () => {
+    AuthService.logout();
+    history.push('/');
+    console.log('fhfhfhhfhfhffhfhfh');
+  }
+
   return (
     <StyledBackground>
+      <button onClick={() => handleLogout()} style={{height:'fit-content', position:'fixed', top:'20px',left:'5px',display:'flex',flexDirection:'column',alignItems:'center', backgroundColor:'transparent', border:'none',outline:'none', fontWeight:'bold',}}>
+        <img src={'/static/images/icons/logout.svg'} style={{height:'30px',width:'30px'}}/>
+        <span>Logout</span>
+      </button>
       <StyledFormContainer className="flexContainer flexContainer--col">
         <StyledLogo/>
         <NewGameForm submit={props.createNewGame} />
