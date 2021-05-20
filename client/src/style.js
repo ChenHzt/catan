@@ -51,4 +51,5 @@ export const StyledGameButton = styled.button`
     padding:5px;
     margin:2px 0;
     border-radius: 10px;
+    border: 2px solid ${props => props.active ? 'red' : 'black'}
 `

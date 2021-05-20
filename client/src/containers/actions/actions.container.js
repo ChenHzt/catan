@@ -32,11 +32,11 @@ const PlayerActionsContainer = (props) => {
     <div
       style={{ display: "flex",padding:'20px', gridArea:props.gridArea,flexDirection: "column", alignItems: "center" }}
     >
-      {actions.road && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_ROAD')}> new road</StyledGameButton>}
-      {actions.settelment && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_SETTELMENT')}> new settelment</StyledGameButton>}
-      {actions.city && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</StyledGameButton>}
-      {actions.developmentCard && <StyledGameButton onClick={() => props.buyDevelopmentCard(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</StyledGameButton>}
-      {actions.activateKnight && <StyledGameButton onClick={() => props.setCurrentAction(props.gameId,'ACTIVATE_KNIGHT')}>use knight card</StyledGameButton>}
+      {actions.road && <StyledGameButton active={props.currentAction==='BUILD_ROAD'} onClick={() => props.setCurrentAction(props.gameId,'BUILD_ROAD')}> new road</StyledGameButton>}
+      {actions.settelment && <StyledGameButton active={props.currentAction==='BUILD_SETTELMENT'} onClick={() => props.setCurrentAction(props.gameId,'BUILD_SETTELMENT')}> new settelment</StyledGameButton>}
+      {actions.city && <StyledGameButton active={props.currentAction==='BUILD_CITY'} onClick={() => props.setCurrentAction(props.gameId,'BUILD_CITY')}> new city</StyledGameButton>}
+      {actions.developmentCard && <StyledGameButton  onClick={() => props.buyDevelopmentCard(props.gameId,'BUY_DEVELOPMENT_CARD')}> development card</StyledGameButton>}
+      {actions.activateKnight && <StyledGameButton active={props.currentAction==='ACTIVATE_KNIGHT'} onClick={() => props.setCurrentAction(props.gameId,'ACTIVATE_KNIGHT')}>use knight card</StyledGameButton>}
       {props.game && (props.dice!==0 || (props.phase !=='GAME' && Object.keys(actions).length===0))  &&<StyledGameButton onClick={() => props.endTurn(props.gameId)}>end turn</StyledGameButton>}
     </div>
   );
