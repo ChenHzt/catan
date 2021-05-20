@@ -282,7 +282,7 @@ const getResourcesForPlayer = (player, game, dice) => {
     settelments.built.forEach((settelment) => {
       const { neighborHexs } = game.board.vertices[settelment.location];
       neighborHexs
-        .filter((neighbor) => neighbor.diceNumber === dice)
+        .filter((neighbor) => neighbor.diceNumber === dice && !game.board.hexs[neighbor.hexId].robber)
         .forEach((neighbor) => (newResources[neighbor.resource] += 1));
     });
 
@@ -292,7 +292,7 @@ const getResourcesForPlayer = (player, game, dice) => {
     cities.built.forEach((city) => {
       const { neighborHexs } = game.board.vertices[city.location];
       neighborHexs
-        .filter((neighbor) => neighbor.diceNumber === dice)
+        .filter((neighbor) => neighbor.diceNumber === dice && !game.board.hexs[neighbor.hexId].robber)
         .forEach((neighbor) => (newResources[neighbor.resource] += 2));
     });
   for (const key in newResources) {
