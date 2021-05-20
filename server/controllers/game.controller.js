@@ -367,9 +367,11 @@ const activateKnightCard = (req, res) => {
     game.board.hexs[req.body.hexId].robber = true;
     player.activatedKnights += 1;
     if(player.activatedKnights >=3 && player.activatedKnights > game.largestArmy.knightsNum){
-      const prevOwnerLargestArmy = Player.findById(game.largestArmy.owner);
-      prevOwnerLargestArmy.victoryPoints -= 2;
-      prevOwnerLargestArmy.save();
+      if(game.largestArmy.owner){
+        const prevOwnerLargestArmy = Player.findById(game.largestArmy.owner);
+        prevOwnerLargestArmy.victoryPoints -= 2;
+        prevOwnerLargestArmy.save();
+      }
       game.largestArmy.owner = player._id;
       player.victoryPoints += 2
       game.largestArmy.knightsNum = player.activatedKnights;
