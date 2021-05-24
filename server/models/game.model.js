@@ -166,6 +166,17 @@ const GameSchema = new mongoose.Schema({
       default:0,
 
     }
+  },
+  developmentCards:{
+    pile:[
+      {
+        type:String,
+        enum:['knight','victoryPoint','monopoly','roadBuilding','yearOfPlenty']
+      }
+    ],
+    lastIndex:{
+      type:Number,
+    }
   }
 });
 

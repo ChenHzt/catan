@@ -16,11 +16,13 @@ const createNewGame = async (req, res) => {
     for (let i = 0; i < playersData.length; i++) {
       players.push(gameUtils.initializePlayer(i, playersData[i]));
     }
+    const developmentCards = gameUtils.createDevelopmentCardsPile();
     const game = new Game({
       playersNum: playersData.length,
       players: players.map((p) => p._id),
       board: gameUtils.initializeBoard(),
       creator: req.user._id,
+      developmentCards
     });
     await game.save();
     // gameUtils.createMapFromHexToVertix(game.board);
@@ -208,6 +210,10 @@ const getValidActionForPlayer = async (req, res) => {
           actions.push(gameConsts.actions.BUY_DEVELOPMENT_CARD);
         if (player.developmentCards.knights > 0)
           actions.push(gameConsts.actions.ACTIVATE_KNIGHT);
+        if (player.developmentCards.monopoly > 0)
+          actions.push(gameConsts.actions.ACTIVATE_MONOPOLY);
+        if (player.developmentCards.yearOfPlenty > 0)
+          actions.push(gameConsts.actions.ACTIVATE_YEAR_OF_PLENTY);
     }
     res.status(200).send(actions);
   } catch (e) {
@@ -346,9 +352,28 @@ const buyDevelopmentCard = (req, res) => {
   const { game } = req;
   try {
     const player = game.players[game.currentTurn];
-    if (game.phase === gameConsts.phases.GAME_PHASE)
-      gameUtils.payWithResources(player, gameConsts.payments.developmentCard);
-    player.developmentCards.knights += 1;
+    if (game.phase !== gameConsts.phases.GAME_PHASE)
+      throw new Error('you can buy development cards only during game phase');  
+    gameUtils.payWithResources(player, gameConsts.payments.developmentCard);
+    const developmentCard = gameUtils.getRandomDevelopmentCard(game.developmentCards)
+    switch(developmentCard){
+      case 'knight':
+        player.developmentCards.knights += 1;
+        break;
+      case 'victoryPoint':
+        player.victoryPoints++;
+        player.developmentCards.victoryPoints++;
+        break;
+      case 'monopoly':
+        player.developmentCards.monopoly += 1;
+        break;
+      case 'roadBuilding':
+        player.developmentCards.roadBuilding += 1;
+        break;
+      case 'yearOfPlenty':
+        player.developmentCards.yearOfPlenty += 1;
+        break;
+    }
     game.save();
     player.save();
     res.status(200).send(game);
@@ -384,6 +409,41 @@ const activateKnightCard = (req, res) => {
   }
 };
 
+const activateMonopoly = (req, res) => {
+  const { game } = req;
+  try {
+    const player = game.players[game.currentTurn];
+    const resourceToTake = req.body.resource;
+    game.players
+    .filter(p => !p._id.equal(player._id))
+    .forEach(p => {
+      const amount = p.resourceCards[resourceToTake];
+      p.resourceCards[resourceToTake] = 0;
+      player.resourceCards[resourceToTake] += amount;
+    })
+    game.save();
+    player.save();
+    res.status(200).send(game);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
+
+const activateYearOfPlenty = (req, res) => {
+  const { game } = req;
+  try {
+    const player = game.players[game.currentTurn];
+    const resourcesToAdd = req.body.resources;
+    player.resourceCards[resourcesToAdd[0]] += 1;
+    player.resourceCards[resourcesToAdd[1]] += 1;
+    game.save();
+    player.save();
+    res.status(200).send(game);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+};
+
 module.exports = {
   createNewGame,
   getGameData,
@@ -400,4 +460,6 @@ module.exports = {
   placeRobber,
   buyDevelopmentCard,
   activateKnightCard,
+  activateMonopoly,
+  activateYearOfPlenty,
 };

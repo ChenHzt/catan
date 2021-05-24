@@ -20,6 +20,7 @@ import DiceContainer from "../../containers/dice/dice.container";
 import ResourcesContainer from "../../containers/resources/resources.container";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from 'react-modal';
 
 function Game(props) {
   const gameContainer = useRef(null);
@@ -77,6 +78,7 @@ function Game(props) {
 
   const renderGame = () => {
     return (
+      <>
       <StyledGridContainer>
         <div
           ref={gameContainer}
@@ -101,6 +103,26 @@ function Game(props) {
         <DiceContainer gridArea="dice" />
         <ResourcesContainer gridArea="resources" />
       </StyledGridContainer>
+      <Modal
+          isOpen={false}
+          // onAfterOpen={afterOpenModal}
+          // onRequestClose={closeModal}
+          // style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <h1>BLA BLAAAAAAA</h1>
+          {/* <h2 ref={_subtitle => (subtitle = _subtitle)}>Hello</h2>
+          <button onClick={closeModal}>close</button>
+          <div>I am a modal</div>
+          <form>
+            <input />
+            <button>tab navigation</button>
+            <button>stays</button>
+            <button>inside</button>
+            <button>the modal</button> */}
+          {/* </form> */}
+        </Modal>
+      </>
     );
   };
 

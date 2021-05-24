@@ -4,7 +4,7 @@
 const { Player } = require('../models/player.model');
 const { Game } = require('../models/game.model');
 const { edgesData, hexasData,mapVerticesNeighbors } = require('../consts/boardGraphConsts');
-const { tileCounts, tileDiceValues } = require('../consts/gameConsts');
+const { tileCounts, tileDiceValues,developmentCardsPile} = require('../consts/gameConsts');
 
 const initializeItems = (amount) => {
   const items = [];
@@ -40,6 +40,31 @@ const initializePlayer = (id, name) => {
   }
   return player;
 };
+
+const createDevelopmentCardsPile = () =>{
+  let pile = []
+  for (const property in developmentCardsPile) {
+    pile = pile.concat(Array(developmentCardsPile[property]).fill(property))
+  }
+  return {
+    pile,
+    lastIndex:pile.length-1
+  };
+}
+
+const getRandomDevelopmentCard = (developmentCards) =>{
+  if(developmentCards.lastIndex < 0)
+    throw new Error('there are no more development cards available');
+
+  function getRandomInt(max) {
+      return Math.floor(Math.random() * max);
+  }
+  const randIndex = getRandomInt(developmentCards.lastIndex+1);
+  const randCard = developmentCards.pile[randIndex]; 
+  developmentCards.pile[randIndex] = developmentCards.pile[developmentCards.lastIndex];
+  developmentCards.lastIndex--;
+  return randCard;
+}
 
 const generateRandomBoard = () => {
   const shuffleArray = (array) => {
@@ -312,6 +337,8 @@ module.exports = {
   // createMapFromHexToVertix,
   createMapFromVertixToHex,
   getResourcesForPlayer,
+  createDevelopmentCardsPile,
+  getRandomDevelopmentCard,
   validations: {
     validateLocationIsAvailable,
     validateRoadLocationIsAvailable,

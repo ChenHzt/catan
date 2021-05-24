@@ -39,6 +39,23 @@ const BUILD_CITY = 'BUILD_CITY'
 const BUILD_ROAD = 'BUILD_ROAD'
 const BUY_DEVELOPMENT_CARD = 'BUY_DEVELOPMENT_CARD'
 const ACTIVATE_KNIGHT = 'ACTIVATE_KNIGHT'
+const ACTIVATE_MONOPOLY = 'ACTIVATE_MONOPOLY'
+const ACTIVATE_YEAR_OF_PLENTY = 'ACTIVATE_YEAR_OF_PLENTY'
+
+//development cards
+const KNIGHT = 'knight'
+const MONOPOLY = 'monopoly'
+const ROAD_BUILDING = 'roadBuilding'
+const VICTORY_POINT = 'victoryPoint'
+const YEAR_OF_PLENTY = 'yearOfPlenty'
+
+const developmentCardsPile = {
+  knight:14,
+  monopoly:2,
+  roadBuilding:2,
+  victoryPoint:5,
+  yearOfPlenty:2
+}
 
 module.exports = {
   payments,
@@ -55,6 +72,9 @@ module.exports = {
     BUILD_CITY,
     BUILD_SETTELMENT,
     BUY_DEVELOPMENT_CARD,
-    ACTIVATE_KNIGHT
-  }
+    ACTIVATE_KNIGHT,
+    ACTIVATE_MONOPOLY,
+    ACTIVATE_YEAR_OF_PLENTY,
+  },
+  developmentCardsPile
 };
